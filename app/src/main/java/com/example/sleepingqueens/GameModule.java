@@ -51,7 +51,7 @@ public class GameModule {
             Bitmap bitmap = BitmapFactory.decodeResource(Resources.getSystem(),QueenCardsPhoto[i]);
             bitmap = Bitmap.createScaledBitmap(bitmap, (int)200, (int)200, true);
             CardQueen c1=new CardQueen("Queen",bitmap,QueenCardsPoints[i]);
-            mainDeck.add(c1);
+            queens.add(c1);
         }
     }
     public boolean AddExercise(CardNumbers c1, CardNumbers c2, CardNumbers c3, CardNumbers c4, CardNumbers c5)
