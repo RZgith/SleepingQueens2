@@ -4,8 +4,8 @@ import android.graphics.Bitmap;
 
 public class CardNumbers extends Card{
     private int number;
-    public CardNumbers(String type, float x, float y, Bitmap bitmap,int num) {
-        super(type, x, y, bitmap);
+    public CardNumbers(String type, Bitmap bitmap,int num) {
+        super(type, bitmap);
         this.number=num;
     }
 

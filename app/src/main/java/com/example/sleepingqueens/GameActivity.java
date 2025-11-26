@@ -12,6 +12,10 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_game);
+        if(getSupportActionBar()!=null)
+        {
+            getSupportActionBar().hide();
+        }
 
     }
 }

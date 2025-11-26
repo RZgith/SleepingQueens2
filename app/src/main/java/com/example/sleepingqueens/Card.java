@@ -7,10 +7,8 @@ public class Card {
     private float x,y;
     private Bitmap bitmap;
 
-    public Card(String type, float x, float y, Bitmap bitmap) {
+    public Card(String type, Bitmap bitmap) {
         this.type = type;
-        this.x = x;
-        this.y = y;
         this.bitmap = bitmap;
     }
 
@@ -24,6 +22,14 @@ public class Card {
 
     public float getY() {
         return y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 
     public Bitmap getBitmap() {

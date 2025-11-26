@@ -16,6 +16,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        if(getSupportActionBar()!=null)
+        {
+            getSupportActionBar().hide();
+        }
 
         gamebtn=findViewById(R.id.gamebtn);
         gamebtn.setOnClickListener(this);
