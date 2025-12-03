@@ -11,6 +11,7 @@ public class GameModule {
 
     public void setMainDeck()
     {
+        //הכנסת קלפים לחפיסה
         mainDeck=new ArrayList<Card>();
         for (int i = 0; i <8 ; i++) {
             Bitmap bitmap = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.king);
@@ -44,6 +45,7 @@ public class GameModule {
     }
     public void setQueens()
     {
+        //בניית חפיסת מלכות
         queens=new ArrayList<Card>();
         int[] QueenCardsPhoto= {R.drawable.queen1, R.drawable.queen2,R.drawable.queen3,R.drawable.queen4,R.drawable.queen5,R.drawable.queen6,R.drawable.queen7,R.drawable.queen8,R.drawable.queen9,R.drawable.queen10,R.drawable.queen11,R.drawable.queen12};
         int[] QueenCardsPoints= {10,5,15,10,20,15,5,15,5,5,10,10};
@@ -56,6 +58,7 @@ public class GameModule {
     }
     public boolean AddExercise(CardNumbers c1, CardNumbers c2, CardNumbers c3, CardNumbers c4, CardNumbers c5)
     {
+        //הורדת קלפים של תרגילים
         ArrayList<Integer> nums = new ArrayList<Integer>();
         nums.add(c1.getNumber());
         nums.add(c2.getNumber());

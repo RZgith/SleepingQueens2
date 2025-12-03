@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "951573638316",
+    "project_id": "sleepingqueens",
+    "storage_bucket": "sleepingqueens.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951573638316:android:3d734ef30c1dc402fa0309",
+        "android_client_info": {
+          "package_name": "com.example.sleepingqueens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyActm-xsYnipvoWbZ7EF1ZPMxij8JE51ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
