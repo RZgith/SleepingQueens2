@@ -1,6 +1,7 @@
 package com.example.sleepingqueens;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
 public class Card {
     private String type;
@@ -34,6 +35,9 @@ public class Card {
 
     public Bitmap getBitmap() {
         return bitmap;
+    }
+    public void draw(Canvas canvas){
+        canvas.drawBitmap(bitmap,x,y,null);
     }
 
 }
