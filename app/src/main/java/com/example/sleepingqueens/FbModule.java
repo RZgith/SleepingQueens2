@@ -7,11 +7,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class FbModule {
     FirebaseDatabase firebaseDatabase;
-    private Context context;
+
     DatabaseReference mainDeck;
+    private Context context;
 
     public FbModule(Context context) {
-        this.context = context;
+        this.context=context;
 
 
         firebaseDatabase = FirebaseDatabase.getInstance("https://sleepingqueens-default-rtdb.firebaseio.com/");

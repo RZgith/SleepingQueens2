@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class GameModule {
     private ArrayList <Card> mainDeck, queens, player1,player2,q1,q2;
+
 
     public void setMainDeck()
     {
@@ -85,6 +88,48 @@ public class GameModule {
                 return true;
         }
         return false;
+    }
+
+    public void Shuffle() {
+        //Collections.shuffle(mainDeck);
+
+            ArrayList<Card> temp = new ArrayList<>();
+            Random rnd = new Random();
+            for (int i = 0; i < mainDeck.size(); i++) {
+                int x = rnd.nextInt(mainDeck.size());
+                temp.add(mainDeck.get(x));
+                mainDeck.remove(x);
+            }
+            for (int i = 0; i < temp.size(); i++) {
+                mainDeck.add(temp.remove(i));
+            }
+
+
+
+
+    }
+    public void ShuffleQueens() {
+        //Collections.shuffle(queens);
+        ArrayList<Card> temp = new ArrayList<>();
+        Random rnd = new Random();
+        for (int i = 0; i < queens.size(); i++) {
+            int x = rnd.nextInt(queens.size());
+            temp.add(queens.get(x));
+            queens.remove(x);
+        }
+        for (int i = 0; i < temp.size(); i++) {
+            queens.add(temp.remove(i));
+        }
+
+
+    }
+
+    public void StartGame(){
+        for (int i = 0; i < 5; i++) {
+            player1.add(mainDeck.remove(0));
+            player2.add(mainDeck.remove(0));
+            //הכנסה של החפיסות לFIREBASE
+        }
     }
 
 }
