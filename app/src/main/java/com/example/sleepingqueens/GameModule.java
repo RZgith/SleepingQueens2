@@ -9,13 +9,19 @@ import java.util.Collections;
 import java.util.Random;
 
 public class GameModule {
-    private ArrayList <Card> mainDeck, queens, player1,player2,q1,q2;
+    public static ArrayList <Card> mainDeck=new ArrayList<Card>(), queens=new ArrayList<Card>(),
+            player1=new ArrayList<Card>(),player2,q1=new ArrayList<Card>(),q2=new ArrayList<Card>();
+    private Context context;
+    private FbModule instace;
 
+    public GameModule(Context context) {
+        this.context=context;
+    }
 
     public void setMainDeck()
     {
         //הכנסת קלפים לחפיסה
-        mainDeck=new ArrayList<Card>();
+
         for (int i = 0; i <8 ; i++) {
             Bitmap bitmap = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.king);
             bitmap = Bitmap.createScaledBitmap(bitmap, (int)200, (int)200, true);
@@ -49,7 +55,6 @@ public class GameModule {
     public void setQueens()
     {
         //בניית חפיסת מלכות
-        queens=new ArrayList<Card>();
         int[] QueenCardsPhoto= {R.drawable.queen1, R.drawable.queen2,R.drawable.queen3,R.drawable.queen4,R.drawable.queen5,R.drawable.queen6,R.drawable.queen7,R.drawable.queen8,R.drawable.queen9,R.drawable.queen10,R.drawable.queen11,R.drawable.queen12};
         int[] QueenCardsPoints= {10,5,15,10,20,15,5,15,5,5,10,10};
         for (int i = 1; i <13 ; i++) {
@@ -124,12 +129,12 @@ public class GameModule {
 
     }
 
-    public void StartGame(){
+    public void StartGame() {
         for (int i = 0; i < 5; i++) {
             player1.add(mainDeck.remove(0));
             player2.add(mainDeck.remove(0));
-            //הכנסה של החפיסות לFIREBASE
-        }
-    }
 
+        }
+        instace = FbModule.getInstance(context);
+    }
 }
