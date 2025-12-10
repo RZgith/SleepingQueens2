@@ -1,15 +1,15 @@
 package com.example.sleepingqueens;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class GameModule {
-    public static ArrayList <Card> mainDeck=new ArrayList<Card>(), queens=new ArrayList<Card>(),
+    public static ArrayList <Card> mainDeck=new ArrayList<Card>(),trash=new ArrayList<Card>(), queens=new ArrayList<Card>(),
             player1=new ArrayList<Card>(),player2,q1=new ArrayList<Card>(),q2=new ArrayList<Card>();
     private Context context;
     private FbModule instace;
@@ -18,7 +18,7 @@ public class GameModule {
         this.context=context;
     }
 
-    public void setMainDeck()
+    private void setMainDeck()
     {
         //הכנסת קלפים לחפיסה
 
@@ -52,7 +52,7 @@ public class GameModule {
             }
         }
     }
-    public void setQueens()
+    private void setQueens()
     {
         //בניית חפיסת מלכות
         int[] QueenCardsPhoto= {R.drawable.queen1, R.drawable.queen2,R.drawable.queen3,R.drawable.queen4,R.drawable.queen5,R.drawable.queen6,R.drawable.queen7,R.drawable.queen8,R.drawable.queen9,R.drawable.queen10,R.drawable.queen11,R.drawable.queen12};
@@ -95,7 +95,7 @@ public class GameModule {
         return false;
     }
 
-    public void Shuffle() {
+    public void shuffle() {
         //Collections.shuffle(mainDeck);
 
             ArrayList<Card> temp = new ArrayList<>();
@@ -113,7 +113,7 @@ public class GameModule {
 
 
     }
-    public void ShuffleQueens() {
+    public void shuffleQueens() {
         //Collections.shuffle(queens);
         ArrayList<Card> temp = new ArrayList<>();
         Random rnd = new Random();
@@ -129,12 +129,24 @@ public class GameModule {
 
     }
 
-    public void StartGame() {
+    public void startGame() {
+        setMainDeck();
+        setQueens();
+        shuffle();
+        shuffleQueens();
         for (int i = 0; i < 5; i++) {
             player1.add(mainDeck.remove(0));
             player2.add(mainDeck.remove(0));
 
         }
         instace = FbModule.getInstance(context);
+        instace.setDeck(mainDeck,"mainDeck");
+        instace.setDeck(queens,"queens");
+        instace.setDeck(q1,"q1");
+        instace.setDeck(player1,"player1");
+        instace.setDeck(q2,"q2");
+        instace.setDeck(player2,"player2");
+        instace.setDeck(trash,"trash");
+
     }
 }
