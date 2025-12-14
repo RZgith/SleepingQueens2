@@ -9,7 +9,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button gamebtn;
+    private Button VS1btn,VSComputerbtn;
+    private int player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,17 +22,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().hide();
         }
 
-        gamebtn=findViewById(R.id.gamebtn);
-        gamebtn.setOnClickListener(this);
+        VS1btn=findViewById(R.id.VS1btn);
+        VS1btn.setOnClickListener(this);
+        VSComputerbtn=findViewById(R.id.VSComputerbtn);
+        VSComputerbtn.setOnClickListener(this);
 
+    }
+    public void player1(){
+        player=1;
+    }
+    public void player2(){
+        player=2;
     }
 
     @Override
     public void onClick(View v) {
-        if(v==gamebtn)
-        {
-            Intent i=new Intent(this, GameActivity.class);
-            startActivity(i);
+        Intent i=new Intent(this, GameActivity.class);
+        if(v==VS1btn)
+        {   CustomDialog customDialog=new CustomDialog(this);
+            customDialog.show();
+            i.putExtra("player",player);
         }
+        if(v==VSComputerbtn)
+        {
+
+        }
+        startActivity(i);
+
     }
 }

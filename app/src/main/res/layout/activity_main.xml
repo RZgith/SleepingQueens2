@@ -13,8 +13,22 @@
         android:layout_height="wrap_content"
         android:textSize="40dp"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:text="Play"
-        android:id="@+id/gamebtn"></Button>
+        android:layout_marginTop="150dp"
+        android:text="Play 1VS1"
+        android:id="@+id/VS1btn"
+        >
+
+    </Button>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="Play against computer"
+        android:id="@+id/VSComputerbtn"
+        >
+
+    </Button>
 
 </LinearLayout>

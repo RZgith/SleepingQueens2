@@ -8,10 +8,12 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="SleepingQueens"
-        android:theme="@style/Theme.SleepingQueens"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        >
+        android:theme="@style/Theme.SleepingQueens">
+        <activity
+            android:name=".Custom1Dialog"
+            android:exported="false" />
         <activity
             android:name=".GameActivity"
             android:exported="false" />
