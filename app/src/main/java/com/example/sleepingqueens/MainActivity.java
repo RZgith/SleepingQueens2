@@ -27,19 +27,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         VSComputerbtn=findViewById(R.id.VSComputerbtn);
         VSComputerbtn.setOnClickListener(this);
 
+
     }
-    public void player1(){
-        player=1;
+    public void whichpPlayer(int Player){
+        player=Player;
     }
-    public void player2(){
-        player=2;
-    }
+
 
     @Override
     public void onClick(View v) {
         Intent i=new Intent(this, GameActivity.class);
         if(v==VS1btn)
-        {   CustomDialog customDialog=new CustomDialog(this);
+        {
+            CustomDialog customDialog=new CustomDialog(this);
             customDialog.show();
             i.putExtra("player",player);
         }
