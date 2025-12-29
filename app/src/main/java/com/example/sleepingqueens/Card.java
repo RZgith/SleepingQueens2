@@ -6,9 +6,9 @@ import android.graphics.Canvas;
 public class Card {
     private String type;
     private float x,y;
-    private Bitmap bitmap;
+    private int bitmap;
 
-    public Card(String type, Bitmap bitmap) {
+    public Card(String type, int bitmap) {
         this.type = type;
         this.bitmap = bitmap;
     }
@@ -33,11 +33,10 @@ public class Card {
         this.y = y;
     }
 
-    public Bitmap getBitmap() {
+    public int getBitmap() {
         return bitmap;
     }
     public void draw(Canvas canvas){
-        canvas.drawBitmap(bitmap,x,y,null);
     }
 
 }

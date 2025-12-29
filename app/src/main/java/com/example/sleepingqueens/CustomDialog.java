@@ -34,7 +34,8 @@ public class CustomDialog extends Dialog {
 
                 }
                 if (checkedId == radioPlayer2.getId())  {
-
+                    i.putExtra("player",2);
+                    context.startActivity(i);
 
                 }
             }

@@ -23,7 +23,7 @@ public class FbModule {
 
     private FbModule( Context context) {
         database = FirebaseDatabase.getInstance("https://sleepingqueens-default-rtdb.firebaseio.com/");
-        database = FirebaseDatabase.getInstance();
+        //database = FirebaseDatabase.getInstance();
         this.context = context;
 
         //this.records = MainActivity.records;

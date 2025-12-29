@@ -15,6 +15,8 @@ public class BoardGame extends View {
         super(context);
         this.context=context;
         gameModule= new GameModule(context);
+        //את הפעולה מתחת צריך לעשות רק לשחקן אחד
+        // if(i.getInten)
         gameModule.startGame();
         //player=
 
