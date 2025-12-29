@@ -1,7 +1,10 @@
 package com.example.sleepingqueens;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -24,13 +27,15 @@ public class CustomDialog extends Dialog {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(@NonNull RadioGroup group, int checkedId) {
+                Intent i = new Intent(context, GameActivity.class);
                 if (checkedId == radioPlayer1.getId()) {
-                    ((MainActivity) context).whichpPlayer(1);
-                    dismiss();
+                    i.putExtra("player",1);
+                    context.startActivity(i);
+
                 }
                 if (checkedId == radioPlayer2.getId())  {
-                    ((MainActivity) context).whichpPlayer(2);
-                    dismiss();
+
+
                 }
             }
         });

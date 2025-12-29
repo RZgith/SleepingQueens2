@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class GameModule {
     public static ArrayList <Card> mainDeck=new ArrayList<Card>(),trash=new ArrayList<Card>(), queens=new ArrayList<Card>(),
-            player1=new ArrayList<Card>(),player2,q1=new ArrayList<Card>(),q2=new ArrayList<Card>();
+            player1=new ArrayList<Card>(),player2=new ArrayList<Card>(),q1=new ArrayList<Card>(),q2=new ArrayList<Card>();
     private Context context;
     private FbModule instace;
 
@@ -45,7 +45,7 @@ public class GameModule {
         int[] NunCardsPhoto= {R.drawable.num1, R.drawable.num2,R.drawable.num3,R.drawable.num4,R.drawable.num5,R.drawable.num6,R.drawable.num7,R.drawable.num8,R.drawable.num9,R.drawable.num10};
         for (int i = 1; i <11 ; i++) {
             for (int j = 0; j < 4; j++) {
-                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),NunCardsPhoto[i]);
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),NunCardsPhoto[i-1]);
                 bitmap = Bitmap.createScaledBitmap(bitmap, (int)180, (int)250, true);
                 CardNumbers c1=new CardNumbers("num",bitmap,i);
                 mainDeck.add(c1);
@@ -58,9 +58,9 @@ public class GameModule {
         int[] QueenCardsPhoto= {R.drawable.queen1, R.drawable.queen2,R.drawable.queen3,R.drawable.queen4,R.drawable.queen5,R.drawable.queen6,R.drawable.queen7,R.drawable.queen8,R.drawable.queen9,R.drawable.queen10,R.drawable.queen11,R.drawable.queen12};
         int[] QueenCardsPoints= {10,5,15,10,20,15,5,15,5,5,10,10};
         for (int i = 1; i <13 ; i++) {
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),QueenCardsPhoto[i]);
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),QueenCardsPhoto[i-1]);
             bitmap = Bitmap.createScaledBitmap(bitmap, (int)200, (int)200, true);
-            CardQueen c1=new CardQueen("Queen",bitmap,QueenCardsPoints[i]);
+            CardQueen c1=new CardQueen("Queen",bitmap,QueenCardsPoints[i-1]);
             queens.add(c1);
         }
     }
@@ -137,7 +137,6 @@ public class GameModule {
         for (int i = 0; i < 5; i++) {
             player1.add(mainDeck.remove(0));
             player2.add(mainDeck.remove(0));
-
         }
         instace = FbModule.getInstance(context);
         instace.setDeck(mainDeck,"mainDeck");

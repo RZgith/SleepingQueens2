@@ -29,25 +29,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-    public void whichpPlayer(int Player){
-        player=Player;
-    }
+
 
 
     @Override
     public void onClick(View v) {
-        Intent i=new Intent(this, GameActivity.class);
+        //Intent i=new Intent(this, GameActivity.class);
         if(v==VS1btn)
         {
             CustomDialog customDialog=new CustomDialog(this);
             customDialog.show();
-            i.putExtra("player",player);
+        //    i.putExtra("player",player);
+        //    startActivity(i);
         }
         if(v==VSComputerbtn)
         {
 
         }
-        startActivity(i);
+
 
     }
 }

@@ -14,7 +14,6 @@ public class BoardGame extends View {
     public BoardGame(Context context) {
         super(context);
         this.context=context;
-
         gameModule= new GameModule(context);
         gameModule.startGame();
         //player=

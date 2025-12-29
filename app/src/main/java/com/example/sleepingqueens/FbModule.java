@@ -104,7 +104,6 @@ public class FbModule {
     {
         DatabaseReference myRef = database.getReference(deckName); // push adds new Arrylist with unique value
         myRef.setValue(arrayList);
-
     }
 
 
