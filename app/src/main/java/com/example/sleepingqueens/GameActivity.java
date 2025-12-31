@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GameActivity extends AppCompatActivity {
 private BoardGame boardGame;
-private GameModule gameModule;
+public int player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,11 +17,11 @@ private GameModule gameModule;
         {
             getSupportActionBar().hide();
         }
-   //     if(getIntent().getIntExtra("player",1)==1)
-   //         (gameModule).startGame();
-
-        boardGame = new BoardGame(this);
+        player=getIntent().getIntExtra("player",1);
+        boardGame = new BoardGame(this,player);
         setContentView(boardGame);
 
     }
+
+
 }
