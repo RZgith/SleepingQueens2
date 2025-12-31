@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class GameModule {
@@ -21,7 +22,7 @@ public class GameModule {
     private void setMainDeck()
     {
         //הכנסת קלפים לחפיסה
-
+        mainDeck.clear();
         for (int i = 0; i <8 ; i++) {
             int bitmap = R.drawable.king;
             Card c1=new Card("king",bitmap);
@@ -50,12 +51,13 @@ public class GameModule {
     }
     private void setQueens()
     {
+        queens.clear();
         //בניית חפיסת מלכות
         int[] QueenCardsPhoto= {R.drawable.queen1, R.drawable.queen2,R.drawable.queen3,R.drawable.queen4,R.drawable.queen5,R.drawable.queen6,R.drawable.queen7,R.drawable.queen8,R.drawable.queen9,R.drawable.queen10,R.drawable.queen11,R.drawable.queen12};
         int[] QueenCardsPoints= {10,5,15,10,20,15,5,15,5,5,10,10};
-        for (int i = 1; i <13 ; i++) {
-            int bitmap =QueenCardsPhoto[i-1];
-            CardQueen c1=new CardQueen("Queen",bitmap,QueenCardsPoints[i-1]);
+        for (int i = 0; i <12 ; i++) {
+            int bitmap =QueenCardsPhoto[i];
+            CardQueen c1=new CardQueen("Queen",bitmap,QueenCardsPoints[i]);
             queens.add(c1);
         }
     }
@@ -95,13 +97,13 @@ public class GameModule {
 
             ArrayList<Card> temp = new ArrayList<>();
             Random rnd = new Random();
-            for (int i = 0; i < mainDeck.size(); i++) {
+            for (int i = 0; i < 56; i++) {
                 int x = rnd.nextInt(mainDeck.size());
-                temp.add(mainDeck.get(x));
-                mainDeck.remove(x);
+                temp.add(mainDeck.remove(x));
+                //mainDeck.remove(x);
             }
-            for (int i = 0; i < temp.size(); i++) {
-                mainDeck.add(temp.remove(i));
+            for (int i = 0; i < 56; i++) {
+                mainDeck.add(temp.remove(0));
             }
 
 
@@ -112,13 +114,13 @@ public class GameModule {
         //Collections.shuffle(queens);
         ArrayList<Card> temp = new ArrayList<>();
         Random rnd = new Random();
-        for (int i = 0; i < queens.size(); i++) {
+        for (int i = 0; i < 12; i++) {
             int x = rnd.nextInt(queens.size());
-            temp.add(queens.get(x));
-            queens.remove(x);
+            temp.add(queens.remove(x));
+            //queens.remove(x);
         }
-        for (int i = 0; i < temp.size(); i++) {
-            queens.add(temp.remove(i));
+        for (int i = 0; i < 12; i++) {
+            queens.add(temp.remove(0));
         }
 
 
@@ -129,6 +131,8 @@ public class GameModule {
         setQueens();
         shuffle();
         shuffleQueens();
+        player1.clear();
+        player2.clear();
         for (int i = 0; i < 5; i++) {
             player1.add(mainDeck.remove(0));
             player2.add(mainDeck.remove(0));
