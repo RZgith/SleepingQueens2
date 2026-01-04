@@ -36,6 +36,7 @@ public class Card {
     public int getBitmap() {
         return bitmap;
     }
+
     public void draw(Canvas canvas,Bitmap bitmap){
         canvas.drawBitmap(bitmap,x,y,null);
     }

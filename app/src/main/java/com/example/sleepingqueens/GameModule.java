@@ -147,8 +147,4 @@ public class GameModule {
         instace.setDeck(trash,"trash");
 
     }
-    public ArrayList<Card> getDeckFromFB(){
-        //להביא את החפיסה מהFB
-        return player1;
-    }
 }

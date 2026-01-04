@@ -41,24 +41,38 @@ public class BoardGame extends View {
         for (int i = 0; i < 5; i++) {
             if(player==1)
             {
-                //לעשות שלוקחים את החפיסה מהFB במקום פשוט את החפיסה
-                ArrayList<Card> player1=gameModule.getDeckFromFB();
-                player1.get(i).setX((Width/5+10)*i);
-                player1.get(i).setY(height-350);
+                gameModule.player1.get(i).setX((Width/5+10)*i+10);
+                gameModule.player1.get(i).setY(height-(height/6));
                 Bitmap bitmap= BitmapFactory.decodeResource(getResources(),gameModule.player1.get(i).getBitmap() );
                 bitmap = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
-                player1.get(i).draw(canvas,bitmap);
+                gameModule.player1.get(i).draw(canvas,bitmap);
+
 
             }
             else
             {
-                //לעשות שלוקחים את החפיסה מהFB במקום פשוט את החפיסה
-                gameModule.player2.get(i).setX((Width/5+10)*i);
-                gameModule.player2.get(i).setY(height-350);
+
+                gameModule.player2.get(i).setX((Width/5+10)*i+10);
+                gameModule.player2.get(i).setY(height-(height/6));
                 Bitmap bitmap= BitmapFactory.decodeResource(getResources(),gameModule.player2.get(i).getBitmap() );
                 bitmap = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
                 gameModule.player2.get(i).draw(canvas,bitmap);
             }
+
+            Card deck=new Card("deck",R.drawable.regularback);
+            deck.setY(height-4*(height/6));
+            deck.setX(Width/2-(Width/5+15));//50
+            Bitmap bitmap= BitmapFactory.decodeResource(getResources(),deck.getBitmap());
+            bitmap = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
+            deck.draw(canvas,bitmap);
+
+            Card trush=new Card("trush",R.drawable.regularback);
+            trush.setY(height-4*(height/6));
+            trush.setX(Width/2+15);
+            Bitmap bitmap2= BitmapFactory.decodeResource(getResources(),trush.getBitmap());
+            bitmap2 = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
+            trush.draw(canvas,bitmap2);
+
 
         }
     }
