@@ -103,6 +103,7 @@ public class BoardGame extends View {
                     QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
                     dialog.show();
                 }
+
                 else
                     invalidate(); // הגורם ל‑onDraw להיקרא שוב
 
