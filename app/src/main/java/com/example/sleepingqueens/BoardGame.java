@@ -1,8 +1,10 @@
 package com.example.sleepingqueens;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.NonNull;
 
@@ -72,10 +74,46 @@ public class BoardGame extends View {
             Bitmap bitmap2= BitmapFactory.decodeResource(getResources(),trush.getBitmap());
             bitmap2 = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
             trush.draw(canvas,bitmap2);
-
-
         }
+
     }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        // קבלת סוג הנגיעה
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            // מיקום הנגיעה על המסך
+            float x = event.getX();
+            float y = event.getY();
+            int selectedCard=-1;
+            for (int i = 0; i <5 ; i++) {
+                if(x>((Width/5+10)*i+10) & x<((Width/5+10)*i+10)+(Width/5-10)
+                        & y>(height-(height/6)) & y<((height-(height/6))+300))
+                {
+                    //אם הוא בחר באחד הקלפים
+                    selectedCard=i;
+                }
+            }
+            if (selectedCard==-1)
+                return true;
+            if(player==1)
+            {
+                if (gameModule.player1.get(selectedCard).getType().equals("king"))
+                {
+                    QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
+                    dialog.show();
+                }
+                else
+                    invalidate(); // הגורם ל‑onDraw להיקרא שוב
+
+            }
+        }
+
+        return true; // מציין שטיפלנו בנגיעה
+    }
+
+
+
 }
 
 
