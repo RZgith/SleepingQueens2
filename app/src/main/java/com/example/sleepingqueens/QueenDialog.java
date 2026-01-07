@@ -1,5 +1,7 @@
 package com.example.sleepingqueens;
 
+import static androidx.core.util.TypedValueCompat.dpToPx;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +10,7 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
@@ -26,15 +29,27 @@ public class QueenDialog extends Dialog {
         this.q = q;
 
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // קריאה ל־Dialog המקורי – חובה לאתחול תקין
-
-        setContentView(new BoardView(getContext()));
+// קריאה ל־Dialog המקורי – חובה לאתחול תקין
+        BoardView boardView = new BoardView(getContext());
         // קובע שהתוכן של הדיאלוג יהיה View מותאם אישית
         // ה־BoardView מצייר את הקלפים על Canvas ומטפל בלחיצות
+        setContentView(boardView);
+
+        // קובעת גודל לדיאלוג (וגם ל־Canvas)
+        if (getWindow() != null) {
+            getWindow().setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            );
+        }
     }
+
+
     public interface OnCardSelectedListener {
         void onCardSelected(Card selectedCard, int position);
 
@@ -44,8 +59,8 @@ public class QueenDialog extends Dialog {
     }
     private class BoardView extends View {
 
-        private final int ROWS = 3;
-        private final int COLS = 4;
+        private final int ROWS = 4;
+        private final int COLS = 3;
 
         public BoardView(Context context) {
             super(context);
@@ -56,12 +71,8 @@ public class QueenDialog extends Dialog {
             super.onDraw(canvas);
 
             if (cards == null || cards.size() != 12) return;
-
-            int canvasWidth = getWidth();
-            int canvasHeight = getHeight();
-
-            int cardWidth = canvasWidth / COLS;
-            int cardHeight = canvasHeight / ROWS;
+            int cardWidth = getWidth() / COLS;
+            int cardHeight = getHeight() / ROWS;
 
             for (int i = 0; i < cards.size(); i++) {
                 int row = i / COLS;
@@ -72,7 +83,7 @@ public class QueenDialog extends Dialog {
 
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(),cards.get(i).getBitmap());
 
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,300,450,true);
+                Bitmap scaledBitmap =Bitmap.createScaledBitmap(bitmap, cardWidth, cardHeight, true);
 
                 canvas.drawBitmap(scaledBitmap, left, top, null);
             }
@@ -105,13 +116,11 @@ public class QueenDialog extends Dialog {
                     // מחזירים את הקלף שנבחר
                     if (listener != null) {
                         listener.onCardSelected(selectedCard, index);
-
                     }
 
                     // מוציאים את הקלף ושמים קלף ריק
                     cards.set(index, new Card("empty",R.drawable.empty_card));
-
-                    invalidate(); // ציור מחדש
+                    dismiss();
                 }
             }
 

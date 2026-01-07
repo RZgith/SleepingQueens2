@@ -102,7 +102,7 @@ public class FbModule {
 
     public void setDeck(ArrayList<Card> arrayList, String deckName)
     {
-        DatabaseReference myRef = database.getReference(deckName); // push adds new Arrylist with unique value
+        DatabaseReference myRef = database.getReference("Decks/" + deckName); // push adds new Arrylist with unique value
         myRef.setValue(arrayList);
     }
 

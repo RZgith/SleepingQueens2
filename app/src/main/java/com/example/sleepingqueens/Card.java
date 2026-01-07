@@ -8,6 +8,9 @@ public class Card {
     private float x,y;
     private int bitmap;
 
+    public Card() {
+    }
+
     public Card(String type, int bitmap) {
         this.type = type;
         this.bitmap = bitmap;
