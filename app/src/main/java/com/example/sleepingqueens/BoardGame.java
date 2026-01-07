@@ -41,25 +41,41 @@ public class BoardGame extends View {
 
         }
         firstTime=false;
-        for (int i = 0; i < 5; i++) {
-            if(player==1)
-            {
-                gameModule.player1.get(i).setX((Width/5+10)*i+10);
-                gameModule.player1.get(i).setY(height-(height/6));
-                Bitmap bitmap= BitmapFactory.decodeResource(getResources(),gameModule.player1.get(i).getBitmap() );
-                bitmap = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
-                gameModule.player1.get(i).draw(canvas,bitmap);
 
-
+            if(player==1) {
+                for (int i = 0; i < 5; i++) {
+                    gameModule.player1.get(i).setX((Width / 5 + 10) * i + 10);
+                    gameModule.player1.get(i).setY(height - (height / 6));
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), gameModule.player1.get(i).getBitmap());
+                    bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                    gameModule.player1.get(i).draw(canvas, bitmap);
+                }
+                if (gameModule.q1!=null){
+                    //ציור של הקלפי מלכות של השחקן
+                    for (int i = 0; i < gameModule.q1.size(); i++) {
+                        if(i>5){
+                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
+                            gameModule.q1.get(i).setY(height - 3*(height / 6));
+                            gameModule.q1.get(i).setX((Width / 5 + 10) * (i-5) + 10);
+                        }
+                        else {
+                            gameModule.q1.get(i).setX((Width / 5 + 10) * i + 10);
+                            gameModule.q1.get(i).setY(height - 2*(height / 6));
+                        }
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), gameModule.q1.get(i).getBitmap());
+                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                        gameModule.q1.get(i).draw(canvas, bitmap);
+                    }
+                }
             }
-            else
-            {
-
-                gameModule.player2.get(i).setX((Width/5+10)*i+10);
-                gameModule.player2.get(i).setY(height-(height/6));
-                Bitmap bitmap= BitmapFactory.decodeResource(getResources(),gameModule.player2.get(i).getBitmap() );
-                bitmap = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
-                gameModule.player2.get(i).draw(canvas,bitmap);
+            else {
+                for (int i = 0; i < 5; i++) {
+                    gameModule.player2.get(i).setX((Width / 5 + 10) * i + 10);
+                    gameModule.player2.get(i).setY(height - (height / 6));
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), gameModule.player2.get(i).getBitmap());
+                    bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                    gameModule.player2.get(i).draw(canvas, bitmap);
+                }
             }
 
             Card deck=new Card("deck",R.drawable.regularback);
@@ -75,6 +91,10 @@ public class BoardGame extends View {
             Bitmap bitmap2= BitmapFactory.decodeResource(getResources(),trush.getBitmap());
             bitmap2 = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
             trush.draw(canvas,bitmap2);
+
+        if (gameModule.q1!=null)
+        {
+
         }
 
     }
