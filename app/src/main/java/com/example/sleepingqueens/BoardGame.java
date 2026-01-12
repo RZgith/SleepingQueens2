@@ -117,16 +117,18 @@ public class BoardGame extends View {
             }
             if (selectedCard==-1)
                 return true;
-            if(player==1)
-            {
-                if (gameModule.player1.get(selectedCard).getType().equals("king"))
-                {
+            if(player==1) {
+                if (gameModule.player1.get(selectedCard).getType().equals("king")) {
                     QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
                     dialog.show();
                 }
-
                 else
+                {
+                    //אם זה מספר להכניס לתוך מערך
+                    //אם נלחץ כפתור של סיים תור אז לבדוק מה יש בתוך המערך - כולל הפעולה של המלך
                     invalidate(); // הגורם ל‑onDraw להיקרא שוב
+                }
+
 
             }
         }

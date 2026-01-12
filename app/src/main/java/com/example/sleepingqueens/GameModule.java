@@ -91,6 +91,11 @@ public class GameModule {
         }
         return false;
     }
+    public boolean DoubleNum(CardNumbers c1, CardNumbers c2){
+        if(c1.getNumber()==c2.getNumber())
+            return true;
+        return false;
+    }
 
     public void shuffle() {
         //Collections.shuffle(mainDeck);
