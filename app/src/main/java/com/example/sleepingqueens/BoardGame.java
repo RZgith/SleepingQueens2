@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -42,6 +44,37 @@ public class BoardGame extends View {
         }
         firstTime=false;
 
+        // Paint לציור המלבן (רקע הכפתור)
+        Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        rectPaint.setColor(Color.GRAY);          // צבע המלבן
+        rectPaint.setStyle(Paint.Style.FILL);    // ציור עם מילוי מלא
+
+        // Paint לציור הטקסט
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.BLACK);          // צבע הטקסט
+        textPaint.setTextSize(42f);               // גודל הטקסט בפיקסלים
+        textPaint.setTextAlign(Paint.Align.CENTER); // יישור אופקי למרכז
+
+        // קואורדינטות המלבן על המסך
+        float left = 0;   // צד שמאל של המלבן
+        float top = height-4*(height/6);    // צד עליון של המלבן
+        float right = left+300;  // צד ימין של המלבן
+        float bottom = top+160; // צד תחתון של המלבן
+
+        // ציור המלבן על ה־Canvas
+        canvas.drawRect(left, top, right, bottom, rectPaint);
+
+        // חישוב נקודת האמצע האופקית של המלבן
+        float centerX = (left + right) / 2;
+
+        // חישוב נקודת האמצע האנכית של המלבן
+        // descent() ו־ascent() משמשים ליישור אנכי מדויק של הטקסט
+        float centerY = (top + bottom) / 2
+                - (textPaint.descent() + textPaint.ascent()) / 2;
+
+        // ציור הטקסט במרכז המלבן
+        canvas.drawText("Submit Action", centerX, centerY, textPaint);
+
             if(player==1) {
                 for (int i = 0; i < 5; i++) {
                     gameModule.player1.get(i).setX((Width / 5 + 10) * i + 10);
@@ -76,6 +109,10 @@ public class BoardGame extends View {
                     bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
                     gameModule.player2.get(i).draw(canvas, bitmap);
                 }
+                if (gameModule.q1!=null)
+                {
+
+                }
             }
 
             Card deck=new Card("deck",R.drawable.regularback);
@@ -85,17 +122,18 @@ public class BoardGame extends View {
             bitmap = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
             deck.draw(canvas,bitmap);
 
-            Card trush=new Card("trush",R.drawable.regularback);
-            trush.setY(height-4*(height/6));
-            trush.setX(Width/2+15);
-            Bitmap bitmap2= BitmapFactory.decodeResource(getResources(),trush.getBitmap());
-            bitmap2 = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
-            trush.draw(canvas,bitmap2);
+           /* if(gameModule.trash!=null){
+                int c=gameModule.trash.size()-1;
+                gameModule.trash.get(c).setY(height-4*(height/6));
+                gameModule.trash.get(c).setX(Width/2+15);
+                Bitmap bitmap2= BitmapFactory.decodeResource(getResources(),gameModule.trash.get(c).getBitmap());
+                bitmap2 = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
+                gameModule.trash.get(c).draw(canvas,bitmap2);
+            }*/
 
-        if (gameModule.q1!=null)
-        {
 
-        }
+
+
 
     }
     @Override
@@ -121,18 +159,21 @@ public class BoardGame extends View {
                 if (gameModule.player1.get(selectedCard).getType().equals("king")) {
                     QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
                     dialog.show();
+
                 }
                 else
                 {
                     //אם זה מספר להכניס לתוך מערך
                     //אם נלחץ כפתור של סיים תור אז לבדוק מה יש בתוך המערך - כולל הפעולה של המלך
-                    invalidate(); // הגורם ל‑onDraw להיקרא שוב
+
                 }
-
-
+                gameModule.ChangeCard(1,selectedCard);
             }
+
         }
 
+        gameModule.SetApdateDecks();
+        invalidate();
         return true; // מציין שטיפלנו בנגיעה
     }
 

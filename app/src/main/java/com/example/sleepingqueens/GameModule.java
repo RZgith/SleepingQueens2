@@ -142,6 +142,10 @@ public class GameModule {
             player1.add(mainDeck.remove(0));
             player2.add(mainDeck.remove(0));
         }
+       SetApdateDecks();
+
+    }
+    public void SetApdateDecks(){
         instace = FbModule.getInstance(context);
         instace.setDeck(mainDeck,"mainDeck");
         instace.setDeck(queens,"queens");
@@ -150,6 +154,15 @@ public class GameModule {
         instace.setDeck(q2,"q2");
         instace.setDeck(player2,"player2");
         instace.setDeck(trash,"trash");
-
+    }
+    public void ChangeCard(int player, int card){
+        if (player==1){
+            trash.add(player1.remove(card));
+            player1.add(mainDeck.remove(0));
+        }
+        else {
+            trash.add(player2.remove(card));
+            player2.add(mainDeck.remove(0));
+        }
     }
 }

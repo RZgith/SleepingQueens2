@@ -121,6 +121,7 @@ public class QueenDialog extends Dialog {
                     // מוציאים את הקלף ושמים קלף ריק
                     cards.set(index, new Card("empty",R.drawable.empty_card));
                     dismiss();
+
                 }
             }
 
