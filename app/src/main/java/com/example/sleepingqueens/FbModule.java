@@ -35,53 +35,60 @@ public class FbModule {
         myQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                GameModule.mainDeck.clear();  // clear the array list
-                // 1. Get the DataSnapshot for the "MainDeck" node
-                DataSnapshot mainDeckSnapshot = snapshot.child("mainDeck");
-                // 2. Iterate through the children of the "MainDeck" node
-                for (DataSnapshot userSnapshot : mainDeckSnapshot.getChildren()) {
-                    // 'userSnapshot' now represents each child under "MainDeck"
-                    Card currentCard = userSnapshot.getValue(Card.class);
-                    GameModule.mainDeck.add(currentCard);
-                }
-                GameModule.queens.clear();  // clear the array list
-                DataSnapshot queensSnapshot = snapshot.child("queens");
-                for (DataSnapshot userSnapshot : queensSnapshot.getChildren()) {
-                    Card currentCard = userSnapshot.getValue(Card.class);
-                    GameModule.queens.add(currentCard);
-                }
-                GameModule.player1.clear();  // clear the array list
-                DataSnapshot player1Snapshot = snapshot.child("player1");
-                for (DataSnapshot userSnapshot : player1Snapshot.getChildren()) {
-                    Card currentCard = userSnapshot.getValue(Card.class);
-                    GameModule.player1.add(currentCard);
-                }
-                GameModule.player2.clear();  // clear the array list
-                DataSnapshot player2Snapshot = snapshot.child("player2");
-                for (DataSnapshot userSnapshot : player2Snapshot.getChildren()) {
-                    Card currentCard = userSnapshot.getValue(Card.class);
-                    GameModule.player2.add(currentCard);
-                }
-                GameModule.q1.clear();  // clear the array list
-                DataSnapshot q1Snapshot = snapshot.child("q1");
-                for (DataSnapshot userSnapshot : q1Snapshot.getChildren()) {
-                    Card currentCard = userSnapshot.getValue(Card.class);
-                    GameModule.q1.add(currentCard);
-                }
-                GameModule.q2.clear();  // clear the array list
-                DataSnapshot q2Snapshot = snapshot.child("q2");
-                for (DataSnapshot userSnapshot : q2Snapshot.getChildren()) {
-                    Card currentCard = userSnapshot.getValue(Card.class);
-                    GameModule.q2.add(currentCard);
 
-                }
-                GameModule.trash.clear();  // clear the array list
-                DataSnapshot trashSnapshot = snapshot.child("trash");
-                for (DataSnapshot userSnapshot : trashSnapshot.getChildren()) {
-                    Card currentCard = userSnapshot.getValue(Card.class);
-                    GameModule.trash.add(currentCard);
+                if(snapshot.exists())
+                {
+                    GameModule.mainDeck.clear();  // clear the array list
+                    // 1. Get the DataSnapshot for the "MainDeck" node
+                    DataSnapshot mainDeckSnapshot = snapshot.child("mainDeck");
+                    // 2. Iterate through the children of the "MainDeck" node
+                    for (DataSnapshot userSnapshot : mainDeckSnapshot.getChildren()) {
+                        // 'userSnapshot' now represents each child under "MainDeck"
+                        Card currentCard = userSnapshot.getValue(Card.class);
+                        GameModule.mainDeck.add(currentCard);
+                    }
+                    GameModule.queens.clear();  // clear the array list
+                    DataSnapshot queensSnapshot = snapshot.child("queens");
+                    for (DataSnapshot userSnapshot : queensSnapshot.getChildren()) {
+                        Card currentCard = userSnapshot.getValue(Card.class);
+                        GameModule.queens.add(currentCard);
+                    }
+                    GameModule.player1.clear();  // clear the array list
+                    DataSnapshot player1Snapshot = snapshot.child("player1");
+                    for (DataSnapshot userSnapshot : player1Snapshot.getChildren()) {
+                        Card currentCard = userSnapshot.getValue(Card.class);
+                        GameModule.player1.add(currentCard);
+                    }
+                    GameModule.player2.clear();  // clear the array list
+                    DataSnapshot player2Snapshot = snapshot.child("player2");
+                    for (DataSnapshot userSnapshot : player2Snapshot.getChildren()) {
+                        Card currentCard = userSnapshot.getValue(Card.class);
+                        GameModule.player2.add(currentCard);
+                    }
+                    GameModule.q1.clear();  // clear the array list
+                    DataSnapshot q1Snapshot = snapshot.child("q1");
+                    for (DataSnapshot userSnapshot : q1Snapshot.getChildren()) {
+                        Card currentCard = userSnapshot.getValue(Card.class);
+                        GameModule.q1.add(currentCard);
+                    }
+                    GameModule.q2.clear();  // clear the array list
+                    DataSnapshot q2Snapshot = snapshot.child("q2");
+                    for (DataSnapshot userSnapshot : q2Snapshot.getChildren()) {
+                        Card currentCard = userSnapshot.getValue(Card.class);
+                        GameModule.q2.add(currentCard);
 
+                    }
+                    GameModule.trash.clear();  // clear the array list
+                    DataSnapshot trashSnapshot = snapshot.child("trash");
+                    for (DataSnapshot userSnapshot : trashSnapshot.getChildren()) {
+                        Card currentCard = userSnapshot.getValue(Card.class);
+                        GameModule.trash.add(currentCard);
+
+                    }
                 }
+
+
+
             }
 
             @Override
@@ -104,6 +111,11 @@ public class FbModule {
     {
         DatabaseReference myRef = database.getReference("Decks/" + deckName); // push adds new Arrylist with unique value
         myRef.setValue(arrayList);
+    }
+
+    public void FbClear(){
+        DatabaseReference myRef = database.getReference("Decks"); // push adds new Arrylist with unique value
+        myRef.removeValue();
     }
 
 

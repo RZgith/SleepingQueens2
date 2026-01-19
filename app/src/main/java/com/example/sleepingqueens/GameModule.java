@@ -92,6 +92,8 @@ public class GameModule {
         return false;
     }
     public boolean DoubleNum(CardNumbers c1, CardNumbers c2){
+        if(!c1.getType().equals("num")|| !c2.getType().equals("num"))
+            return false;
         if(c1.getNumber()==c2.getNumber())
             return true;
         return false;
@@ -146,6 +148,7 @@ public class GameModule {
 
     }
     public void SetApdateDecks(){
+
         instace = FbModule.getInstance(context);
         instace.setDeck(mainDeck,"mainDeck");
         instace.setDeck(queens,"queens");
@@ -155,10 +158,13 @@ public class GameModule {
         instace.setDeck(player2,"player2");
         instace.setDeck(trash,"trash");
     }
+    public void DecksClear(){
+        instace = FbModule.getInstance(context);
+        instace.FbClear();
+    }
     public void ChangeCard(int player, int card){
         if (player==1){
-            trash.add(player1.remove(card));
-            player1.add(mainDeck.remove(0));
+            trash.add(player1.set(card,mainDeck.remove(0)));
         }
         else {
             trash.add(player2.remove(card));
