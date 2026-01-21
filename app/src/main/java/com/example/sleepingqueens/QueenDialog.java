@@ -18,11 +18,11 @@ import java.util.ArrayList;
 
 public class QueenDialog extends Dialog {
     private Context context;
-    private ArrayList<Card> cards;
-    private ArrayList<Card> q;
+    private ArrayList<CardQueen> cards;
+    private ArrayList<CardQueen> q;
     private OnCardSelectedListener listener;
 
-    public QueenDialog(@NonNull Context context, ArrayList<Card> cards,ArrayList<Card> q) {
+    public QueenDialog(@NonNull Context context, ArrayList<CardQueen> cards,ArrayList<CardQueen> q) {
         super(context);
         this.context=context;
         this.cards = cards;
@@ -83,9 +83,11 @@ public class QueenDialog extends Dialog {
 
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(),cards.get(i).getBitmap());
 
-                Bitmap scaledBitmap =Bitmap.createScaledBitmap(bitmap, cardWidth, cardHeight, true);
+                if(!cards.get(i).getType().equals("empty")){
+                    Bitmap scaledBitmap =Bitmap.createScaledBitmap(bitmap, cardWidth, cardHeight, true);
+                    canvas.drawBitmap(scaledBitmap, left, top, null);
+                }
 
-                canvas.drawBitmap(scaledBitmap, left, top, null);
             }
         }
         @Override
@@ -106,7 +108,7 @@ public class QueenDialog extends Dialog {
 
                 if (index >= 0 && index < cards.size()) {
 
-                    Card selectedCard = cards.get(index);
+                    CardQueen selectedCard = cards.get(index);
 
                     // אם זה קלף ריק – לא עושים כלום
                     if (selectedCard.getType().equals("empty")) {
@@ -119,7 +121,7 @@ public class QueenDialog extends Dialog {
                     }
 
                     // מוציאים את הקלף ושמים קלף ריק
-                    cards.set(index, new Card("empty",R.drawable.empty_card));
+                    cards.set(index, new CardQueen("empty",R.drawable.empty_card,0));
                     dismiss();
 
                 }

@@ -10,6 +10,9 @@ public class CardQueen extends Card{
 
     }
 
+    public CardQueen() {
+    }
+
     public int getPoints() {
         return points;
     }

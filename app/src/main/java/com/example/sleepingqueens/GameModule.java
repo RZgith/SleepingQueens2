@@ -10,8 +10,9 @@ import java.util.Collections;
 import java.util.Random;
 
 public class GameModule {
-    public static ArrayList <Card> mainDeck=new ArrayList<Card>(),trash=new ArrayList<Card>(), queens=new ArrayList<Card>(),
-            player1=new ArrayList<Card>(),player2=new ArrayList<Card>(),q1=new ArrayList<Card>(),q2=new ArrayList<Card>();
+    public static ArrayList <CardNumbers> mainDeck=new ArrayList<CardNumbers>(),trash=new ArrayList<CardNumbers>(),
+            player1=new ArrayList<CardNumbers>(),player2=new ArrayList<CardNumbers>();
+    public static ArrayList<CardQueen> queens=new ArrayList<CardQueen>(),q1=new ArrayList<CardQueen>(),q2=new ArrayList<CardQueen>();
     private Context context;
     private FbModule instace;
 
@@ -25,19 +26,19 @@ public class GameModule {
         mainDeck.clear();
         for (int i = 0; i <8 ; i++) {
             int bitmap = R.drawable.king;
-            Card c1=new Card("king",bitmap);
+            CardNumbers c1=new CardNumbers("king",bitmap,-1);
             mainDeck.add(c1);
         }
 
         for (int i = 0; i <4 ; i++) {
             int bitmap = R.drawable.knight;
-            Card c1=new Card("knight",bitmap);
+            CardNumbers c1=new CardNumbers("knight",bitmap,-1);
             mainDeck.add(c1);
         }
 
         for (int i = 0; i <4 ; i++) {
             int bitmap = R.drawable.dragon;
-            Card c1=new Card("dragon",bitmap);
+            CardNumbers c1=new CardNumbers("dragon",bitmap,-1);
             mainDeck.add(c1);
         }
         int[] NunCardsPhoto= {R.drawable.num1, R.drawable.num2,R.drawable.num3,R.drawable.num4,R.drawable.num5,R.drawable.num6,R.drawable.num7,R.drawable.num8,R.drawable.num9,R.drawable.num10};
@@ -102,7 +103,7 @@ public class GameModule {
     public void shuffle() {
         //Collections.shuffle(mainDeck);
 
-            ArrayList<Card> temp = new ArrayList<>();
+            ArrayList<CardNumbers> temp = new ArrayList<CardNumbers>();
             Random rnd = new Random();
             for (int i = 0; i < 56; i++) {
                 int x = rnd.nextInt(mainDeck.size());
@@ -119,7 +120,7 @@ public class GameModule {
     }
     public void shuffleQueens() {
         //Collections.shuffle(queens);
-        ArrayList<Card> temp = new ArrayList<>();
+        ArrayList<CardQueen> temp = new ArrayList<>();
         Random rnd = new Random();
         for (int i = 0; i < 12; i++) {
             int x = rnd.nextInt(queens.size());
@@ -151,10 +152,10 @@ public class GameModule {
 
         instace = FbModule.getInstance(context);
         instace.setDeck(mainDeck,"mainDeck");
-        instace.setDeck(queens,"queens");
-        instace.setDeck(q1,"q1");
+        instace.setDeckQ(queens,"queens");
+        instace.setDeckQ(q1,"q1");
         instace.setDeck(player1,"player1");
-        instace.setDeck(q2,"q2");
+        instace.setDeckQ(q2,"q2");
         instace.setDeck(player2,"player2");
         instace.setDeck(trash,"trash");
     }

@@ -9,6 +9,9 @@ public class CardNumbers extends Card{
         this.number=num;
     }
 
+    public CardNumbers() {
+    }
+
     public int getNumber() {
         return number;
     }

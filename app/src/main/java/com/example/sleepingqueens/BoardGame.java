@@ -174,12 +174,31 @@ public class BoardGame extends View {
                     }
                     else {
                         //השחקן רוצה לעשות תרגיל או לזרוק דאבל
-                        /*if (selectedCardsNum.size() == 2 & gameModule.DoubleNum((CardNumbers) GameModule.player1.get(selectedCardsNum.get(0)), (CardNumbers) GameModule.player1.get(selectedCardsNum.get(1))))
+                        if (selectedCardsNum.size() == 2 & gameModule.DoubleNum((CardNumbers) GameModule.player1.get(selectedCardsNum.get(0)), (CardNumbers) GameModule.player1.get(selectedCardsNum.get(1))))
                         {
                             for (int i = 0; i < selectedCardsNum.size(); i++) {
                                 gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
-                        }*/
+                        }
+                        else if (selectedCardsNum.size() == 3 &  gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),null,null))
+                        {
+                            for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                gameModule.ChangeCard(1, selectedCardsNum.get(i));
+                            }
+                        }
+                        else if (selectedCardsNum.size() == 4 & gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),null))
+                        {
+                            for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                gameModule.ChangeCard(1, selectedCardsNum.get(i));
+                            }
+                        }
+                        else if (selectedCardsNum.size() == 5 & gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(4))))
+                        {
+
+                            for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                gameModule.ChangeCard(1, selectedCardsNum.get(i));
+                            }
+                        }
 
                        /* if (selectedCardsNum.size() == 3)
                             gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),null,null);
@@ -189,7 +208,7 @@ public class BoardGame extends View {
                             gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(4)));
 */
                         //חילוף של כל הקלפים שהשחקן בחר
-                      /*  for (int i = 0; i < selectedCardsNum.size(); i++) {
+                         /*  for (int i = 0; i < selectedCardsNum.size(); i++) {
                             gameModule.ChangeCard(1, selectedCardsNum.get(i));
                         }*/
                     }
@@ -205,7 +224,7 @@ public class BoardGame extends View {
                 {
                     //בחירה של השחקן במלך על מנת לקנות מלכה
                     if (GameModule.player1.get(selectedCard).getType().equals("king")) {
-                        QueenDialog dialog = new QueenDialog(context, GameModule.queens, GameModule.q1);
+                        QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
                         dialog.show();
                         gameModule.ChangeCard(1, selectedCard);
                     }
