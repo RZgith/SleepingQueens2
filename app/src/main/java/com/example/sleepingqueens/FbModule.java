@@ -87,6 +87,8 @@ public class FbModule {
                     }
                 }
 
+                ((GameActivity)context).SetNewMove();
+
 
 
             }

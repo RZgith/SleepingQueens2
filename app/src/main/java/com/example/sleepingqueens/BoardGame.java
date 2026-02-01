@@ -101,6 +101,23 @@ public class BoardGame extends View {
                         GameModule.q1.get(i).draw(canvas, bitmap);
                     }
                 }
+                if (GameModule.q2 !=null){
+                    //ציור של הקלפי מלכות של השחקן
+                    for (int i = 0; i < GameModule.q2.size(); i++) {
+                        if(i>5){
+                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
+                            GameModule.q2.get(i).setY(0);
+                            GameModule.q2.get(i).setX((Width / 5 + 10) * (i-5) + 10);
+                        }
+                        else {
+                            GameModule.q2.get(i).setX((Width / 5 + 10) * i + 10);
+                            GameModule.q2.get(i).setY(0);
+                        }
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q2.get(i).getBitmap());
+                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                        GameModule.q2.get(i).draw(canvas, bitmap);
+                    }
+                }
             }
             else {
                 for (int i = 0; i < 5; i++) {
@@ -110,10 +127,39 @@ public class BoardGame extends View {
                     bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
                     GameModule.player2.get(i).draw(canvas, bitmap);
                 }
-                if (GameModule.q1 !=null)
-                {
-
-
+                if (GameModule.q2 !=null){
+                    //ציור של הקלפי מלכות של השחקן
+                    for (int i = 0; i < GameModule.q2.size(); i++) {
+                        if(i>5){
+                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
+                            GameModule.q2.get(i).setY(height - 3*(height / 6));
+                            GameModule.q2.get(i).setX((Width / 5 + 10) * (i-5) + 10);
+                        }
+                        else {
+                            GameModule.q2.get(i).setX((Width / 5 + 10) * i + 10);
+                            GameModule.q2.get(i).setY(height - 2*(height / 6));
+                        }
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q2.get(i).getBitmap());
+                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                        GameModule.q2.get(i).draw(canvas, bitmap);
+                    }
+                }
+                if (GameModule.q1 !=null){
+                    //ציור של הקלפי מלכות של השחקן
+                    for (int i = 0; i < GameModule.q1.size(); i++) {
+                        if(i>5){
+                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
+                            GameModule.q1.get(i).setY(0);
+                            GameModule.q1.get(i).setX((Width / 5 + 10) * (i-5) + 10);
+                        }
+                        else {
+                            GameModule.q1.get(i).setX((Width / 5 + 10) * i + 10);
+                            GameModule.q1.get(i).setY(0);
+                        }
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q1.get(i).getBitmap());
+                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                        GameModule.q1.get(i).draw(canvas, bitmap);
+                    }
                 }
             }
 
@@ -199,18 +245,6 @@ public class BoardGame extends View {
                                 gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
-
-                       /* if (selectedCardsNum.size() == 3)
-                            gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),null,null);
-                        if (selectedCardsNum.size() == 4)
-                            gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),null);
-                        if (selectedCardsNum.size() == 5)
-                            gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(4)));
-*/
-                        //חילוף של כל הקלפים שהשחקן בחר
-                         /*  for (int i = 0; i < selectedCardsNum.size(); i++) {
-                            gameModule.ChangeCard(1, selectedCardsNum.get(i));
-                        }*/
                     }
                     //מחיקה של הערכים על מנת התחלה של תור חדש
                     int num = selectedCardsNum.size();
@@ -239,17 +273,79 @@ public class BoardGame extends View {
 
                 }
             }
-            else
+            if(player==2)
                 {
                     //שחקן 2
+                    if (x>0 & x<300
+                            & y>height-4*(height/6) & y<(height-4*(height/6)+160))
+                    {
+                        //אם השחקן לחץ על exercise
+                        if (selectedCardsNum.size() == 1) {
+                            gameModule.ChangeCard(2, selectedCardsNum.get(0));
+                            //השחקן רוצב לזרוק קלף אחד
+                        }
+                        else {
+                            //השחקן רוצה לעשות תרגיל או לזרוק דאבל
+                            if (selectedCardsNum.size() == 2 & gameModule.DoubleNum((CardNumbers) GameModule.player2.get(selectedCardsNum.get(0)), (CardNumbers) GameModule.player2.get(selectedCardsNum.get(1))))
+                            {
+                                for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                }
+                            }
+                            else if (selectedCardsNum.size() == 3 &  gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),null,null))
+                            {
+                                for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                }
+                            }
+                            else if (selectedCardsNum.size() == 4 & gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),null))
+                            {
+                                for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                }
+                            }
+                            else if (selectedCardsNum.size() == 5 & gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(4))))
+                            {
+
+                                for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                }
+                            }
+                        }
+                        //מחיקה של הערכים על מנת התחלה של תור חדש
+                        int num = selectedCardsNum.size();
+                        for (int i = 0; i < num; i++)
+                        {
+                            selectedCardsNum.remove(0);
+
+                        }
+                    }
+                    else
+                    {
+                        //בחירה של השחקן במלך על מנת לקנות מלכה
+                        if (GameModule.player2.get(selectedCard).getType().equals("king")) {
+                            QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q2);
+                            dialog.show();
+                            gameModule.ChangeCard(2, selectedCard);
+                        }
+                        else
+                        {
+                            //בחירה של השחקן באביר כדי לגנות מלכה
+                            //בחירה של השחקן במספר או
+                            // לזרוק קלף ללא ביצוע הפעולה (כאשר לשחקן השני אין מלכות או שלא הופעל אביר מהצד השני)
+                            selectedCardsNum.add(selectedCard);
+
+                        }
+
+                    }
 
                 }
             //מחיקה של הערכים בפיירבייס על מנת לשים את המערכים מחדש
             gameModule.DecksClear();
             //השמה מחדש של הערכין בפיירבייס
             gameModule.SetApdateDecks();
-            //ציור מחדש של הלוח
-            invalidate();
+
+
         }
         // מציין שטיפלנו בנגיעה
         return true;
@@ -257,7 +353,10 @@ public class BoardGame extends View {
     }
 
 
-
+    public void SetNewMove() {
+        //ציור מחדש של הלוח
+        invalidate();
+    }
 }
 
 

@@ -24,4 +24,7 @@ public int player;
     }
 
 
+    public void SetNewMove() {
+        boardGame.SetNewMove();
+    }
 }

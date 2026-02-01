@@ -167,9 +167,9 @@ public class GameModule {
         if (player==1){
             trash.add(player1.set(card,mainDeck.remove(0)));
         }
-        else {
-            trash.add(player2.remove(card));
-            player2.add(mainDeck.remove(0));
+        if(player==2){
+            trash.add(player2.set(card,mainDeck.remove(0)));
         }
+
     }
 }
