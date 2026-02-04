@@ -1,6 +1,7 @@
 package com.example.sleepingqueens;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,8 @@ public class FbModule {
         // limit to only 8 items
         Query myQuery = database.getReference("Decks");
 
+        Log.d("Roni", "FbModule: " + GameActivity.player);
+
         myQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -61,7 +64,10 @@ public class FbModule {
                     }
                     GameModule.player2.clear();  // clear the array list
                     DataSnapshot player2Snapshot = snapshot.child("player2");
+                    Log.d("Roni", "onDataChange: " + player2Snapshot);
                     for (DataSnapshot userSnapshot : player2Snapshot.getChildren()) {
+                        Log.d("Roni", "onDataChange: " + userSnapshot);
+
                         CardNumbers currentCard = userSnapshot.getValue(CardNumbers.class);
                         GameModule.player2.add(currentCard);
                     }
@@ -85,8 +91,10 @@ public class FbModule {
                         GameModule.trash.add(currentCard);
 
                     }
+
                 }
 
+                BoardGame.IsFbRead = true;
                 ((GameActivity)context).SetNewMove();
 
 

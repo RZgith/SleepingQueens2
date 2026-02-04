@@ -134,7 +134,7 @@ public class GameModule {
 
     }
 
-    public void startGame() {
+    public void startGame1() {
         setMainDeck();
         setQueens();
         shuffle();
@@ -148,6 +148,11 @@ public class GameModule {
        SetApdateDecks();
 
     }
+    public void startGame2(){
+        instace = FbModule.getInstance(context);
+    }
+
+
     public void SetApdateDecks(){
 
         instace = FbModule.getInstance(context);

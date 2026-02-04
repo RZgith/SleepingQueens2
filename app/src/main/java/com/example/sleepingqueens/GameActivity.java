@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class GameActivity extends AppCompatActivity {
 private BoardGame boardGame;
-public int player;
+public static int player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

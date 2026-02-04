@@ -18,6 +18,7 @@ public class BoardGame extends View {
     private int Width,height;
     private boolean firstTime=true;
     private final int player;
+    public static boolean IsFbRead = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
 
     public BoardGame(Context context,int player) {
@@ -25,15 +26,16 @@ public class BoardGame extends View {
         this.context=context;
         gameModule= new GameModule(context);
         this.player=player;
-        if(player==1){
-            gameModule.startGame();
-
-
+        if(player==1 & firstTime){
+            gameModule.startGame1();
+        }
+        if(player==2){
+            gameModule.startGame2();
         }
 
+
+
     }
-
-
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
@@ -42,8 +44,12 @@ public class BoardGame extends View {
             Width=canvas.getWidth();
             height=canvas.getHeight();
 
+
         }
         firstTime=false;
+
+        if(!IsFbRead)
+            return;
 
         // Paint לציור המלבן (רקע הכפתור)
         Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -76,50 +82,51 @@ public class BoardGame extends View {
         // ציור הטקסט במרכז המלבן
         canvas.drawText("Exercise", centerX, centerY, textPaint);
 
-            if(player==1) {
-                for (int i = 0; i < 5; i++) {
+        if(player==1)
+        {
+            for (int i = 0; i < 5; i++) {
                     GameModule.player1.get(i).setX((Width / 5 + 10) * i + 10);
                     GameModule.player1.get(i).setY(height - (height / 6));
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.player1.get(i).getBitmap());
                     bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
                     GameModule.player1.get(i).draw(canvas, bitmap);
-                }
-                if (GameModule.q1 !=null){
+            }
+            if (GameModule.q1 !=null){
                     //ציור של הקלפי מלכות של השחקן
-                    for (int i = 0; i < GameModule.q1.size(); i++) {
-                        if(i>5){
+                for (int i = 0; i < GameModule.q1.size(); i++) {
+                    if(i>5){
                             //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
                             GameModule.q1.get(i).setY(height - 3*(height / 6));
                             GameModule.q1.get(i).setX((Width / 5 + 10) * (i-5) + 10);
-                        }
-                        else {
+                    }
+                    else {
                             GameModule.q1.get(i).setX((Width / 5 + 10) * i + 10);
                             GameModule.q1.get(i).setY(height - 2*(height / 6));
-                        }
+                    }
                         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q1.get(i).getBitmap());
                         bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
                         GameModule.q1.get(i).draw(canvas, bitmap);
-                    }
                 }
-                if (GameModule.q2 !=null){
+            }
+            if (GameModule.q2 !=null){
                     //ציור של הקלפי מלכות של השחקן
-                    for (int i = 0; i < GameModule.q2.size(); i++) {
-                        if(i>5){
+                for (int i = 0; i < GameModule.q2.size(); i++) {
+                    if(i>5){
                             //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
                             GameModule.q2.get(i).setY(0);
                             GameModule.q2.get(i).setX((Width / 5 + 10) * (i-5) + 10);
-                        }
-                        else {
+                    }
+                    else {
                             GameModule.q2.get(i).setX((Width / 5 + 10) * i + 10);
                             GameModule.q2.get(i).setY(0);
-                        }
+                    }
                         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q2.get(i).getBitmap());
                         bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
                         GameModule.q2.get(i).draw(canvas, bitmap);
-                    }
                 }
             }
-            else {
+        }
+        else {
                 for (int i = 0; i < 5; i++) {
                     GameModule.player2.get(i).setX((Width / 5 + 10) * i + 10);
                     GameModule.player2.get(i).setY(height - (height / 6));
@@ -161,7 +168,7 @@ public class BoardGame extends View {
                         GameModule.q1.get(i).draw(canvas, bitmap);
                     }
                 }
-            }
+        }
 
             Card deck=new Card("deck",R.drawable.regularback);
             deck.setY(height-4*(height/6));
@@ -178,11 +185,6 @@ public class BoardGame extends View {
                 bitmap2 = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
                 gameModule.trash.get(c).draw(canvas,bitmap2);
             }*/
-
-
-
-
-
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
