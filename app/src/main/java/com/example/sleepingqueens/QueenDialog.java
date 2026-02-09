@@ -22,6 +22,7 @@ public class QueenDialog extends Dialog {
     private ArrayList<CardQueen> q;
     private OnCardSelectedListener listener;
 
+
     public QueenDialog(@NonNull Context context, ArrayList<CardQueen> cards,ArrayList<CardQueen> q) {
         super(context);
         this.context=context;
@@ -81,7 +82,7 @@ public class QueenDialog extends Dialog {
                 int left = col * cardWidth;
                 int top = row * cardHeight;
 
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),cards.get(i).getBitmap());
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.queenback);
 
                 if(!cards.get(i).getType().equals("empty")){
                     Bitmap scaledBitmap =Bitmap.createScaledBitmap(bitmap, cardWidth, cardHeight, true);
@@ -126,7 +127,7 @@ public class QueenDialog extends Dialog {
 
                 }
             }
-
+            BoardGame.Apdate();
             return true;
 
         }

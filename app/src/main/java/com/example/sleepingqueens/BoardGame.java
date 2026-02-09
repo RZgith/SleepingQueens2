@@ -14,7 +14,9 @@ import java.util.ArrayList;
 
 public class BoardGame extends View {
     private final Context context;
-    private final GameModule gameModule;
+
+    private static GameModule gameModule;
+    //ערך סטטי על מנת שיהיה אפשר להשתמש בו בפעולה סטטית.
     private int Width,height;
     private boolean firstTime=true;
     private final int player;
@@ -189,6 +191,7 @@ public class BoardGame extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+
         // קבלת סוג הנגיעה
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             // מיקום הנגיעה על המסך
@@ -342,10 +345,7 @@ public class BoardGame extends View {
                     }
 
                 }
-            //מחיקה של הערכים בפיירבייס על מנת לשים את המערכים מחדש
-            gameModule.DecksClear();
-            //השמה מחדש של הערכין בפיירבייס
-            gameModule.SetApdateDecks();
+            Apdate();
 
 
         }
@@ -358,6 +358,13 @@ public class BoardGame extends View {
     public void SetNewMove() {
         //ציור מחדש של הלוח
         invalidate();
+    }
+    public static void Apdate(){
+        //הפעולה סטטית על מנת שיהיה אפשר להשתמש בה בדיאלוג של המלכות.
+        //מחיקה של הערכים בפיירבייס על מנת לשים את המערכים מחדש
+        gameModule.DecksClear();
+        //השמה מחדש של הערכין בפיירבייס
+        gameModule.SetApdateDecks();
     }
 }
 
