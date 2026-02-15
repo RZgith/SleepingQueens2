@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -28,16 +29,21 @@ public class BoardGame extends View {
         this.context=context;
         gameModule= new GameModule(context);
         this.player=player;
+
         if(player==1 & firstTime){
             gameModule.startGame1();
+
         }
         if(player==2){
             gameModule.startGame2();
+
+
         }
 
 
 
     }
+
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
@@ -50,7 +56,7 @@ public class BoardGame extends View {
         }
         firstTime=false;
 
-        if(!IsFbRead)
+    /*    if(!IsFbRead)
             return;
 
         // Paint לציור המלבן (רקע הכפתור)
@@ -184,16 +190,104 @@ public class BoardGame extends View {
                 gameModule.trash.get(c).setY(height-4*(height/6));
                 gameModule.trash.get(c).setX(Width/2+15);
                 Bitmap bitmap2= BitmapFactory.decodeResource(getResources(),gameModule.trash.get(c).getBitmap());
-                bitmap2 = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
+                bitmap2 = Bitmap.createScaledBitmap(bitmap2,Width/5-10,300,false);
                 gameModule.trash.get(c).draw(canvas,bitmap2);
             }*/
+
+
+
+        // הגנה: אם הנתונים טרם נקראו מ-Firebase, לא מציירים כלום
+        if(!IsFbRead) return;
+
+        // --- ציור כפתור Exercise (נשאר אותו דבר) ---
+        Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        rectPaint.setColor(Color.GRAY);
+        float left = 0, top = height-4*(height/6), right = 300, bottom = top+160;
+        canvas.drawRect(left, top, right, bottom, rectPaint);
+
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(42f);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText("Exercise", (left + right) / 2, (top + bottom) / 2 - (textPaint.descent() + textPaint.ascent()) / 2, textPaint);
+
+        // --- ציור קלפי שחקן 1 ---
+        if (player == 1) {
+            // בדיקה שהרשימה קיימת ואינה ריקה לפני הגישה אליה
+            if (GameModule.player1 != null && !GameModule.player1.isEmpty()) {
+                for (int i = 0; i < GameModule.player1.size(); i++) {
+                    // הגנה נוספת ליתר ביטחון למקרה שהרשימה קטנה מ-5
+                    CardNumbers card = GameModule.player1.get(i);
+                    card.setX((Width / 5 + 10) * i + 10);
+                    card.setY(height - (height / 6));
+
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), card.getBitmap());
+                    bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                    card.draw(canvas, bitmap);
+                }
+            }
+
+            // ציור המלכות (שימוש ב-size() במקום מספר קבוע)
+            drawQueensList(canvas, GameModule.q1, height - 2 * (height / 6), height - 3 * (height / 6));
+            drawQueensList(canvas, GameModule.q2, 0, 0); // מלכות יריב מוצגות למעלה
+        }
+        // --- ציור קלפי שחקן 2 ---
+        else {
+            if (GameModule.player2 != null && !GameModule.player2.isEmpty()) {
+                for (int i = 0; i < GameModule.player2.size(); i++) {
+                    CardNumbers card = GameModule.player2.get(i);
+                    card.setX((Width / 5 + 10) * i + 10);
+                    card.setY(height - (height / 6));
+
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), card.getBitmap());
+                    bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
+                    card.draw(canvas, bitmap);
+                }
+            }
+
+            drawQueensList(canvas, GameModule.q2, height - 2 * (height / 6), height - 3 * (height / 6));
+            drawQueensList(canvas, GameModule.q1, 0, 0);
+        }
+
+        // --- ציור הקופה (Deck) ---
+        Card deck = new Card("deck", R.drawable.regularback);
+        deck.setY(height - 4 * (height / 6));
+        deck.setX(Width / 2 - (Width / 5 + 15));
+        Bitmap deckBitmap = BitmapFactory.decodeResource(getResources(), deck.getBitmap());
+        deckBitmap = Bitmap.createScaledBitmap(deckBitmap, Width / 5 - 10, 300, false);
+        deck.draw(canvas, deckBitmap);
+    }
+
+    // פונקציית עזר לציור מלכות למניעת כפל קוד וקריסות
+    private void drawQueensList(Canvas canvas, ArrayList<CardQueen> queens, float yRow1, float yRow2) {
+        if (queens != null) {
+            for (int i = 0; i < queens.size(); i++) {
+                CardQueen q = queens.get(i);
+                if (i >= 5) {
+                    q.setY(yRow2);
+                    q.setX((Width / 5 + 10) * (i - 5) + 10);
+                } else {
+                    q.setX((Width / 5 + 10) * i + 10);
+                    q.setY(yRow1);
+                }
+                Bitmap qBitmap = BitmapFactory.decodeResource(getResources(), q.getBitmap());
+                qBitmap = Bitmap.createScaledBitmap(qBitmap, Width / 5 - 10, 300, false);
+                q.draw(canvas, qBitmap);
+            }
+        }
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-
+        //Log.d("Roni", "whatturn: " + GameModule.turnCounter);
         // קבלת סוג הנגיעה
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+            // אם זה לא התור של השחקן - אנחנו פשוט מחזירים true (כדי לצרוך את האירוע) ולא עושים כלום
+            if (GameModule.turnCounter % 2 != player % 2) {
+                // אופציונלי: אפשר להוסיף כאן Toast.makeText שיודיע "זה לא התור שלך"
+                return true;
+            }
             // מיקום הנגיעה על המסך
             float x = event.getX();
             float y = event.getY();
@@ -216,7 +310,7 @@ public class BoardGame extends View {
             if(player==1 )
             {
                 if (x>0 & x<300
-                    & y>height-4*(height/6) & y<(height-4*(height/6)+160))
+                    & y>height-4*(height/6) & y<(height-4*(height/6)+160) )
                 {
                     //אם השחקן לחץ על exercise
                     if (selectedCardsNum.size() == 1) {
@@ -358,13 +452,18 @@ public class BoardGame extends View {
     public void SetNewMove() {
         //ציור מחדש של הלוח
         invalidate();
+
     }
     public static void Apdate(){
+
         //הפעולה סטטית על מנת שיהיה אפשר להשתמש בה בדיאלוג של המלכות.
         //מחיקה של הערכים בפיירבייס על מנת לשים את המערכים מחדש
+        GameModule.turnCounter=1-GameModule.turnCounter;
         gameModule.DecksClear();
         //השמה מחדש של הערכין בפיירבייס
         gameModule.SetApdateDecks();
+
+
     }
 }
 

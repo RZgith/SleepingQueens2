@@ -92,6 +92,20 @@ public class FbModule {
 
                     }
 
+                    DataSnapshot counterSnapshot = snapshot.child("counter");
+
+                    if (counterSnapshot.exists()) {
+
+                        Long value = counterSnapshot.getValue(Long.class);  // חשוב Long!
+
+                        if (value != null) {
+                            GameModule.turnCounter = value.intValue();
+                        }
+                    }
+
+
+
+
                 }
 
                 BoardGame.IsFbRead = true;
@@ -134,4 +148,8 @@ public class FbModule {
     }
 
 
+    public void setCounter(int turnCounter) {
+        DatabaseReference myRef = database.getReference("Decks/" + "counter"); // push adds new Arrylist with unique value
+        myRef.setValue(turnCounter);
+    }
 }

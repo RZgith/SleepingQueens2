@@ -15,6 +15,7 @@ public class GameModule {
     public static ArrayList<CardQueen> queens=new ArrayList<CardQueen>(),q1=new ArrayList<CardQueen>(),q2=new ArrayList<CardQueen>();
     private Context context;
     private FbModule instace;
+    public static int turnCounter;
 
     public GameModule(Context context) {
         this.context=context;
@@ -145,6 +146,7 @@ public class GameModule {
             player1.add(mainDeck.remove(0));
             player2.add(mainDeck.remove(0));
         }
+        turnCounter=1;
        SetApdateDecks();
 
     }
@@ -156,6 +158,7 @@ public class GameModule {
     public void SetApdateDecks(){
 
         instace = FbModule.getInstance(context);
+        instace.setCounter(turnCounter);
         instace.setDeck(mainDeck,"mainDeck");
         instace.setDeckQ(queens,"queens");
         instace.setDeckQ(q1,"q1");
@@ -175,6 +178,7 @@ public class GameModule {
         if(player==2){
             trash.add(player2.set(card,mainDeck.remove(0)));
         }
+
 
     }
 }
