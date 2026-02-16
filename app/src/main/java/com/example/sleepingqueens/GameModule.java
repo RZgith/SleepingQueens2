@@ -172,6 +172,14 @@ public class GameModule {
         instace.FbClear();
     }
     public void ChangeCard(int player, int card){
+        //אם החבילה התרוקנה צריך לחדש אותה ולערבב אותה ולהיפטר מהקלפים שבזבל
+        if (mainDeck == null || mainDeck.isEmpty()){
+            setMainDeck();
+            shuffle();
+            for (int i = 0; i < trash.size(); i++) {
+                trash.remove(0);
+            }
+        }
         if (player==1){
             trash.add(player1.set(card,mainDeck.remove(0)));
         }

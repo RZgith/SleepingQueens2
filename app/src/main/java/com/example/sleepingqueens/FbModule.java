@@ -149,6 +149,8 @@ public class FbModule {
 
 
     public void setCounter(int turnCounter) {
+        Log.d("Roni", "setCounter: " + turnCounter);
+
         DatabaseReference myRef = database.getReference("Decks/" + "counter"); // push adds new Arrylist with unique value
         myRef.setValue(turnCounter);
     }

@@ -127,7 +127,7 @@ public class QueenDialog extends Dialog {
 
                 }
             }
-            BoardGame.Apdate();
+            BoardGame.ApdateQueen();
             return true;
 
         }

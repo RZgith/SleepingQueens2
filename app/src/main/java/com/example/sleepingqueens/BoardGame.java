@@ -43,8 +43,6 @@ public class BoardGame extends View {
 
 
     }
-
-
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
@@ -199,7 +197,7 @@ public class BoardGame extends View {
         // הגנה: אם הנתונים טרם נקראו מ-Firebase, לא מציירים כלום
         if(!IsFbRead) return;
 
-        // --- ציור כפתור Exercise (נשאר אותו דבר) ---
+        // --- ציור כפתור Exercise ---
         Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         rectPaint.setColor(Color.GRAY);
         float left = 0, top = height-4*(height/6), right = 300, bottom = top+160;
@@ -227,7 +225,7 @@ public class BoardGame extends View {
                 }
             }
 
-            // ציור המלכות (שימוש ב-size() במקום מספר קבוע)
+            // ציור המלכות (שימוש ב-size())
             drawQueensList(canvas, GameModule.q1, height - 2 * (height / 6), height - 3 * (height / 6));
             drawQueensList(canvas, GameModule.q2, 0, 0); // מלכות יריב מוצגות למעלה
         }
@@ -256,6 +254,28 @@ public class BoardGame extends View {
         Bitmap deckBitmap = BitmapFactory.decodeResource(getResources(), deck.getBitmap());
         deckBitmap = Bitmap.createScaledBitmap(deckBitmap, Width / 5 - 10, 300, false);
         deck.draw(canvas, deckBitmap);
+
+        // --- ציור ערימת הזריקה (Trash) ---
+        // בדיקה כפולה: 1) שהרשימה קיימת בזיכרון (לא Null) ו-2) שיש בה לפחות קלף אחד (לא ריקה)
+        if (gameModule.trash != null && !gameModule.trash.isEmpty()) {
+            // השגת האינדקס של הקלף האחרון
+            int lastIndex = gameModule.trash.size() - 1;
+            Card trashCard = gameModule.trash.get(lastIndex);
+
+            // קביעת מיקום הקלף (מימין לקופה)
+            trashCard.setY(height - 4 * (height / 6));
+            trashCard.setX(Width / 2 + 15);
+
+            // טעינת התמונה ושינוי גודל
+            Bitmap trashBitmap = BitmapFactory.decodeResource(getResources(), trashCard.getBitmap());
+            Bitmap scaledTrash = Bitmap.createScaledBitmap(trashBitmap, Width / 5 - 10, 300, false);
+
+            // ציור הקלף
+            trashCard.draw(canvas, scaledTrash);
+
+            // חשוב: שחרור ה-Bitmap מהזיכרון כדי למנוע קריסות (מאחר ואנחנו יוצרים אותו בתוך ה-Draw)
+            trashBitmap.recycle();
+        }
     }
 
     // פונקציית עזר לציור מלכות למניעת כפל קוד וקריסות
@@ -279,7 +299,7 @@ public class BoardGame extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        //Log.d("Roni", "whatturn: " + GameModule.turnCounter);
+        Log.d("Roni", "whatturn: counter: " + GameModule.turnCounter + " player: " + player);
         // קבלת סוג הנגיעה
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
@@ -309,10 +329,13 @@ public class BoardGame extends View {
 
             if(player==1 )
             {
+                Log.d("Roni", "1" +" player: " + player);
+
                 if (x>0 & x<300
                     & y>height-4*(height/6) & y<(height-4*(height/6)+160) )
                 {
                     //אם השחקן לחץ על exercise
+                    Log.d("Roni",  " exercise1" );
                     if (selectedCardsNum.size() == 1) {
                         gameModule.ChangeCard(1, selectedCardsNum.get(0));
                         //השחקן רוצב לזרוק קלף אחד
@@ -357,6 +380,8 @@ public class BoardGame extends View {
                 {
                     //בחירה של השחקן במלך על מנת לקנות מלכה
                     if (GameModule.player1.get(selectedCard).getType().equals("king")) {
+                        Log.d("Roni",  " king" );
+
                         QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
                         dialog.show();
                         gameModule.ChangeCard(1, selectedCard);
@@ -366,7 +391,12 @@ public class BoardGame extends View {
                         //בחירה של השחקן באביר כדי לגנות מלכה
                         //בחירה של השחקן במספר או
                         // לזרוק קלף ללא ביצוע הפעולה (כאשר לשחקן השני אין מלכות או שלא הופעל אביר מהצד השני)
+                        for (int i = 0; i < selectedCardsNum.size(); i++) {
+                            if(selectedCard==selectedCardsNum.get(i))
+                                return true;
+                        }
                         selectedCardsNum.add(selectedCard);
+                        return true;
 
                     }
 
@@ -374,10 +404,12 @@ public class BoardGame extends View {
             }
             if(player==2)
                 {
+                    Log.d("Roni", "2"+ " player: " + player);
                     //שחקן 2
                     if (x>0 & x<300
                             & y>height-4*(height/6) & y<(height-4*(height/6)+160))
                     {
+                        Log.d("Roni",  " exercise2" );
                         //אם השחקן לחץ על exercise
                         if (selectedCardsNum.size() == 1) {
                             gameModule.ChangeCard(2, selectedCardsNum.get(0));
@@ -421,8 +453,10 @@ public class BoardGame extends View {
                     }
                     else
                     {
+
                         //בחירה של השחקן במלך על מנת לקנות מלכה
                         if (GameModule.player2.get(selectedCard).getType().equals("king")) {
+                            Log.d("Roni", "king2 ");
                             QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q2);
                             dialog.show();
                             gameModule.ChangeCard(2, selectedCard);
@@ -432,8 +466,12 @@ public class BoardGame extends View {
                             //בחירה של השחקן באביר כדי לגנות מלכה
                             //בחירה של השחקן במספר או
                             // לזרוק קלף ללא ביצוע הפעולה (כאשר לשחקן השני אין מלכות או שלא הופעל אביר מהצד השני)
+                            for (int i = 0; i < selectedCardsNum.size(); i++) {
+                                if(selectedCard==selectedCardsNum.get(i))
+                                    return true;
+                            }
                             selectedCardsNum.add(selectedCard);
-
+                            return true;
                         }
 
                     }
@@ -464,6 +502,11 @@ public class BoardGame extends View {
         gameModule.SetApdateDecks();
 
 
+    }
+    public static void ApdateQueen() {
+        gameModule.DecksClear();
+        //השמה מחדש של הערכין בפיירבייס
+        gameModule.SetApdateDecks();
     }
 }
 
