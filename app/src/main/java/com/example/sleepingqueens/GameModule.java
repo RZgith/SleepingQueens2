@@ -1,12 +1,8 @@
 package com.example.sleepingqueens;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class GameModule {
@@ -176,9 +172,7 @@ public class GameModule {
         if (mainDeck == null || mainDeck.isEmpty()){
             setMainDeck();
             shuffle();
-            for (int i = 0; i < trash.size(); i++) {
-                trash.remove(0);
-            }
+            trash.clear();
         }
         if (player==1){
             trash.add(player1.set(card,mainDeck.remove(0)));
@@ -189,5 +183,24 @@ public class GameModule {
         }
 
 
+    }
+
+    public int Win(){
+        int sum1 = 0;
+        for (int i = 0; i < q1.size(); i++) {
+            sum1=+q1.get(i).getPoints();
+        }
+        int sum2 = 0;
+        for (int i = 0; i < q1.size(); i++) {
+            sum2=+q1.get(i).getPoints();
+        }
+        if (sum1==sum2 && sum1>54)
+            return 3;
+        if(sum1>54 && sum1>sum2)
+            return 1;
+        if(sum2>54 && sum1<sum2)
+            return 2;
+
+        return -1;
     }
 }

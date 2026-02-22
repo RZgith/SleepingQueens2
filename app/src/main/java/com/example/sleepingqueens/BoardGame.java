@@ -9,12 +9,14 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
 public class BoardGame extends View {
-    private final Context context;
+    private  Context context;
 
     private static GameModule gameModule;
     //ערך סטטי על מנת שיהיה אפשר להשתמש בו בפעולה סטטית.
@@ -313,14 +315,14 @@ public class BoardGame extends View {
             float y = event.getY();
             int selectedCard=-1;
             for (int i = 0; i <5 ; i++) {
-                if(x>((Width/5+10)*i+10) & x<((Width/5+10)*i+10)+(Width/5-10)
+                if(x>((Width/5+10)*i+10) && x<((Width/5+10)*i+10)+(Width/5-10)
                         & y>(height-(height/6)) & y<((height-(height/6))+300))
                 {
                     //אם הוא בחר באחד הקלפים
                     selectedCard=i;
                 }
             }
-            if (selectedCard==-1 & !(x>0 & x<300
+            if (selectedCard==-1 && !(x>0 && x<300
                     & y>height-4*(height/6) & y<(height-4*(height/6)+160)))
             {
                 //אם מה שנלחץ אינו קלף וגם לא הכפתור של ה-exercise
@@ -332,7 +334,7 @@ public class BoardGame extends View {
                 Log.d("Roni", "1" +" player: " + player);
 
                 if (x>0 & x<300
-                    & y>height-4*(height/6) & y<(height-4*(height/6)+160) )
+                    & y>height-4*(height/6) && y<(height-4*(height/6)+160) )
                 {
                     //אם השחקן לחץ על exercise
                     Log.d("Roni",  " exercise1" );
@@ -342,39 +344,43 @@ public class BoardGame extends View {
                     }
                     else {
                         //השחקן רוצה לעשות תרגיל או לזרוק דאבל
-                        if (selectedCardsNum.size() == 2 & gameModule.DoubleNum((CardNumbers) GameModule.player1.get(selectedCardsNum.get(0)), (CardNumbers) GameModule.player1.get(selectedCardsNum.get(1))))
+                        if (selectedCardsNum.size() == 2 && gameModule.DoubleNum((CardNumbers) GameModule.player1.get(selectedCardsNum.get(0)), (CardNumbers) GameModule.player1.get(selectedCardsNum.get(1))))
                         {
                             for (int i = 0; i < selectedCardsNum.size(); i++) {
                                 gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
-                        else if (selectedCardsNum.size() == 3 &  gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),null,null))
+                        else if (selectedCardsNum.size() == 3 &&  gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),null,null))
                         {
                             for (int i = 0; i < selectedCardsNum.size(); i++) {
                                 gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
-                        else if (selectedCardsNum.size() == 4 & gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),null))
+                        else if (selectedCardsNum.size() == 4 && gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),null))
                         {
                             for (int i = 0; i < selectedCardsNum.size(); i++) {
                                 gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
-                        else if (selectedCardsNum.size() == 5 & gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(4))))
+                        else if (selectedCardsNum.size() == 5 && gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(4))))
                         {
 
                             for (int i = 0; i < selectedCardsNum.size(); i++) {
                                 gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
+                        else {
+                            // התרגיל שגוי - מנקים בחירה ומאפשרים לבחור מחדש
+                            selectedCardsNum.clear();
+                            Toast.makeText(context, "תרגיל לא חוקי, נסה שוב!", Toast.LENGTH_SHORT).show();
+                            invalidate(); // רענון המסך
+                            return true;
+                        }
+
                     }
                     //מחיקה של הערכים על מנת התחלה של תור חדש
-                    int num = selectedCardsNum.size();
-                    for (int i = 0; i < num; i++)
-                    {
-                        selectedCardsNum.remove(0);
+                    selectedCardsNum.clear();
 
-                    }
                 }
                 else
                 {
@@ -388,12 +394,17 @@ public class BoardGame extends View {
                     }
                     else
                     {
-                        //בחירה של השחקן באביר כדי לגנות מלכה
+                        //בחירה של השחקן באביר כדי לגנוב מלכה
                         //בחירה של השחקן במספר או
                         // לזרוק קלף ללא ביצוע הפעולה (כאשר לשחקן השני אין מלכות או שלא הופעל אביר מהצד השני)
                         for (int i = 0; i < selectedCardsNum.size(); i++) {
                             if(selectedCard==selectedCardsNum.get(i))
+                            {
+                                //אם הקלף כבר נבחר בפעם השניה שנוגעים בו הבחירה בו מתבטלת
+                                selectedCardsNum.remove(i);
                                 return true;
+                            }
+
                         }
                         selectedCardsNum.add(selectedCard);
                         return true;
@@ -423,33 +434,36 @@ public class BoardGame extends View {
                                     gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
-                            else if (selectedCardsNum.size() == 3 &  gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),null,null))
+                            else if (selectedCardsNum.size() == 3 &&  gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),null,null))
                             {
                                 for (int i = 0; i < selectedCardsNum.size(); i++) {
                                     gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
-                            else if (selectedCardsNum.size() == 4 & gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),null))
+                            else if (selectedCardsNum.size() == 4 && gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),null))
                             {
                                 for (int i = 0; i < selectedCardsNum.size(); i++) {
                                     gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
-                            else if (selectedCardsNum.size() == 5 & gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(4))))
+                            else if (selectedCardsNum.size() == 5 && gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(4))))
                             {
 
                                 for (int i = 0; i < selectedCardsNum.size(); i++) {
                                     gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
+                            else {
+                                // התרגיל שגוי - מנקים בחירה ומאפשרים לבחור מחדש
+                                selectedCardsNum.clear();
+                                Toast.makeText(context, "תרגיל לא חוקי, נסה שוב!", Toast.LENGTH_SHORT).show();
+                                invalidate(); // רענון המסך
+                                return true;
+                            }
+
                         }
                         //מחיקה של הערכים על מנת התחלה של תור חדש
-                        int num = selectedCardsNum.size();
-                        for (int i = 0; i < num; i++)
-                        {
-                            selectedCardsNum.remove(0);
-
-                        }
+                        selectedCardsNum.clear();
                     }
                     else
                     {
@@ -468,7 +482,12 @@ public class BoardGame extends View {
                             // לזרוק קלף ללא ביצוע הפעולה (כאשר לשחקן השני אין מלכות או שלא הופעל אביר מהצד השני)
                             for (int i = 0; i < selectedCardsNum.size(); i++) {
                                 if(selectedCard==selectedCardsNum.get(i))
+                                {
+                                    //אם הקלף כבר נבחר בפעם השניה שנוגעים בו הבחירה בו מתבטלת
+                                    selectedCardsNum.remove(i);
                                     return true;
+                                }
+
                             }
                             selectedCardsNum.add(selectedCard);
                             return true;
@@ -478,6 +497,8 @@ public class BoardGame extends View {
 
                 }
             Apdate();
+            isWin();
+
 
 
         }
@@ -491,6 +512,8 @@ public class BoardGame extends View {
         //ציור מחדש של הלוח
         invalidate();
 
+
+
     }
     public static void Apdate(){
 
@@ -501,6 +524,24 @@ public class BoardGame extends View {
         //השמה מחדש של הערכין בפיירבייס
         gameModule.SetApdateDecks();
 
+
+    }
+    private void isWin(){
+        if (gameModule.Win()>0){
+            int win=gameModule.Win();
+            if (win==1){
+                Toast.makeText(context, "player 1 wom!!", Toast.LENGTH_SHORT).show();
+                GameModule.turnCounter=-1;
+                ApdateQueen();
+            }
+            else if (win==2) {
+                Toast.makeText(context, "player 2 wom!!", Toast.LENGTH_SHORT).show();
+                GameModule.turnCounter=-1;
+                ApdateQueen();
+            }
+            else
+                Toast.makeText(context, "YOU BOTH ARE IN A TIE! keep play to win", Toast.LENGTH_SHORT).show();
+        }
 
     }
     public static void ApdateQueen() {

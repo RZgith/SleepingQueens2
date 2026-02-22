@@ -21,6 +21,7 @@ public class QueenDialog extends Dialog {
     private ArrayList<CardQueen> cards;
     private ArrayList<CardQueen> q;
     private OnCardSelectedListener listener;
+    private int qcount=0;
 
 
     public QueenDialog(@NonNull Context context, ArrayList<CardQueen> cards,ArrayList<CardQueen> q) {
@@ -85,6 +86,7 @@ public class QueenDialog extends Dialog {
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.queenback);
 
                 if(!cards.get(i).getType().equals("empty")){
+                    qcount++;
                     Bitmap scaledBitmap =Bitmap.createScaledBitmap(bitmap, cardWidth, cardHeight, true);
                     canvas.drawBitmap(scaledBitmap, left, top, null);
                 }
@@ -111,6 +113,11 @@ public class QueenDialog extends Dialog {
 
                     CardQueen selectedCard = cards.get(index);
 
+                    //אם לא נשארו קלפים של מלכות
+                    if (selectedCard.getType().equals("empty") && qcount==0){
+                        BoardGame.ApdateQueen();
+                        dismiss();
+                    }
                     // אם זה קלף ריק – לא עושים כלום
                     if (selectedCard.getType().equals("empty")) {
                         return true;
