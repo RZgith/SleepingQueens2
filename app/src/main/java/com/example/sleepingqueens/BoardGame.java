@@ -511,6 +511,7 @@ public class BoardGame extends View {
     public void SetNewMove() {
         //ציור מחדש של הלוח
         invalidate();
+        //isWin();
 
 
 
