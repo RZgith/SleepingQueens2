@@ -188,11 +188,11 @@ public class GameModule {
     public int Win(){
         int sum1 = 0;
         for (int i = 0; i < q1.size(); i++) {
-            sum1=+q1.get(i).getPoints();
+            sum1=sum1+q1.get(i).getPoints();
         }
         int sum2 = 0;
-        for (int i = 0; i < q1.size(); i++) {
-            sum2=+q1.get(i).getPoints();
+        for (int i = 0; i < q2.size(); i++) {
+            sum2=sum2+q2.get(i).getPoints();
         }
         if (sum1==sum2 && sum1>54)
             return 3;
