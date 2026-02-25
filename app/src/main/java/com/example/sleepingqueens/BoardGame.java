@@ -532,13 +532,19 @@ public class BoardGame extends View {
             int win=gameModule.Win();
             if (win==1){
                 Toast.makeText(context, "player 1 wom!!", Toast.LENGTH_SHORT).show();
-                GameModule.turnCounter=-1;
+                if(GameModule.turnCounter % 2 == player % 2)
+                    GameModule.turnCounter=1-GameModule.turnCounter;
                 ApdateQueen();
+                WinDialog dialog = new WinDialog(context, player, win);
+                dialog.show();
             }
             else if (win==2) {
                 Toast.makeText(context, "player 2 wom!!", Toast.LENGTH_SHORT).show();
-                GameModule.turnCounter=-1;
+                if(GameModule.turnCounter % 2 == player % 2)
+                    GameModule.turnCounter=1-GameModule.turnCounter;
                 ApdateQueen();
+                WinDialog dialog = new WinDialog(context, player, win);
+                dialog.show();
             }
             else
                 Toast.makeText(context, "YOU BOTH ARE IN A TIE! keep play to win", Toast.LENGTH_SHORT).show();

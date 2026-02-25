@@ -184,6 +184,16 @@ public class GameModule {
 
 
     }
+    public void NewGame(){
+        mainDeck.clear();
+        player1.clear();
+        player2.clear();
+        q1.clear();
+        q2.clear();
+        queens.clear();
+        trash.clear();
+        turnCounter=1;
+    }
 
     public int Win(){
         int sum1 = 0;
