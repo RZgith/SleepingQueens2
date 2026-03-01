@@ -14,7 +14,7 @@ public class WinDialog extends Dialog implements View.OnClickListener {
     private Context context;
     private int player,win;
     private TextView et;
-    private Button btnYes,btnNo;
+    private Button btnOK;
     public WinDialog(@NonNull Context context,int player,int win) {
         super(context);
         this.context=context;
@@ -27,13 +27,11 @@ public class WinDialog extends Dialog implements View.OnClickListener {
 
         //חיבור הXML לCLASS
         setContentView(R.layout.win_dialog_game);
-        btnYes=findViewById(R.id.btnYes);
-        btnYes.setOnClickListener(this);
-        btnNo=findViewById(R.id.btnNo);
-        btnNo.setOnClickListener(this);
+        btnOK=findViewById(R.id.btnOK);
+        btnOK.setOnClickListener(this);
         et = findViewById(R.id.et);
         if(player==win)
-            et.setText("ניצחת!!");
+            et.setText("ניצחת!! ");
         else
             et.setText("הפסדת.. לא נורא תנסה שוב!");
 
@@ -41,22 +39,7 @@ public class WinDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
-        if (view==btnYes)
-        {
-
-            /*Intent i = new Intent(context, GameActivity.class);
-            i.putExtra("player",player);
-            context.startActivity(i);*/
-            /*CustomDialog customDialog=new CustomDialog(context);
-            customDialog.show();*/
-            //להוסיף שהם מגיעים לBOARDGAME כמו בפעם הראשונה
-            //אוליי לשיםב-PUTEXTRA ערך כמו
-            // .3 שאומר שהם התחילו את המשחק שוב אבל הם שחקן 1 ואותו דבר ל2
-            //לצייר מחדש את החבילות? למחוק מה שהיה לפני? לזמן לא משנה מי מהם את הזה של המשחק מחדש?
-            //להשתמש ב- NEWGAME מה-GAMEMODULE
-        }
-        if (view==btnNo)
+        if (view==btnOK)
         {
             Intent i = new Intent(context, MainActivity.class);
             context.startActivity(i);

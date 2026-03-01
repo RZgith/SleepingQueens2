@@ -184,7 +184,7 @@ public class GameModule {
 
 
     }
-    public void NewGame(){
+    public static void NewGame(){
         mainDeck.clear();
         player1.clear();
         player2.clear();
