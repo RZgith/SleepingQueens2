@@ -33,10 +33,12 @@ public class BoardGame extends View {
         this.player=player;
 
         if(player==1 & firstTime){
+            gameModule.NewGame();
             gameModule.startGame1();
 
         }
         if(player==2){
+            gameModule.NewGame();
             gameModule.startGame2();
 
 
