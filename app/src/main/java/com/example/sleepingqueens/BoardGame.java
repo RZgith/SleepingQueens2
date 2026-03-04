@@ -20,9 +20,11 @@ public class BoardGame extends View {
 
     private static GameModule gameModule;
     //ערך סטטי על מנת שיהיה אפשר להשתמש בו בפעולה סטטית.
-    private int Width,height;
-    private boolean firstTime=true;
-    private final int player;
+    private int Width;
+    private int height;
+    private static int myQnumber=0;
+    private boolean firstTime=true,choosing=false;
+    private static int player;
     public static boolean IsFbRead = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
 
@@ -220,7 +222,7 @@ public class BoardGame extends View {
                 for (int i = 0; i < GameModule.player1.size(); i++) {
                     // הגנה נוספת ליתר ביטחון למקרה שהרשימה קטנה מ-5
                     CardNumbers card = GameModule.player1.get(i);
-                    card.setX((Width / 5 + 10) * i + 10);
+                    card.setX((Width / 5 ) * i + 10);
                     card.setY(height - (height / 6));
 
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), card.getBitmap());
@@ -231,14 +233,14 @@ public class BoardGame extends View {
 
             // ציור המלכות (שימוש ב-size())
             drawQueensList(canvas, GameModule.q1, height - 2 * (height / 6), height - 3 * (height / 6));
-            drawQueensList(canvas, GameModule.q2, 0, 0); // מלכות יריב מוצגות למעלה
+            drawQueensList(canvas, GameModule.q2, 0, (height / 6)); // מלכות יריב מוצגות למעלה
         }
         // --- ציור קלפי שחקן 2 ---
         else {
             if (GameModule.player2 != null && !GameModule.player2.isEmpty()) {
                 for (int i = 0; i < GameModule.player2.size(); i++) {
                     CardNumbers card = GameModule.player2.get(i);
-                    card.setX((Width / 5 + 10) * i + 10);
+                    card.setX((Width / 5 ) * i + 10);
                     card.setY(height - (height / 6));
 
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), card.getBitmap());
@@ -248,7 +250,7 @@ public class BoardGame extends View {
             }
 
             drawQueensList(canvas, GameModule.q2, height - 2 * (height / 6), height - 3 * (height / 6));
-            drawQueensList(canvas, GameModule.q1, 0, 0);
+            drawQueensList(canvas, GameModule.q1, 0, (height / 6));
         }
 
         // --- ציור הקופה (Deck) ---
@@ -289,9 +291,9 @@ public class BoardGame extends View {
                 CardQueen q = queens.get(i);
                 if (i >= 5) {
                     q.setY(yRow2);
-                    q.setX((Width / 5 + 10) * (i - 5) + 10);
+                    q.setX((Width / 5 ) * (i - 5) + 10);
                 } else {
-                    q.setX((Width / 5 + 10) * i + 10);
+                    q.setX((Width / 5 ) * i + 10);
                     q.setY(yRow1);
                 }
                 Bitmap qBitmap = BitmapFactory.decodeResource(getResources(), q.getBitmap());
@@ -317,7 +319,7 @@ public class BoardGame extends View {
             float y = event.getY();
             int selectedCard=-1;
             for (int i = 0; i <5 ; i++) {
-                if(x>((Width/5+10)*i+10) && x<((Width/5+10)*i+10)+(Width/5-10)
+                if(x>((Width/5)*i+10) && x<((Width/5)*i+10)+(Width/5)
                         & y>(height-(height/6)) & y<((height-(height/6))+300))
                 {
                     //אם הוא בחר באחד הקלפים
@@ -328,7 +330,55 @@ public class BoardGame extends View {
                     & y>height-4*(height/6) & y<(height-4*(height/6)+160)))
             {
                 //אם מה שנלחץ אינו קלף וגם לא הכפתור של ה-exercise
-                return true;
+                //בחר לפני באביר
+                if(choosing && player==2) {
+                    for (int i = 0; i < gameModule.q1.size(); i++) {
+
+                        if (i >= 5) {
+                            if (x > ((Width / 5) * (i - 5) + 10) && x < ((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
+                                    && y < ((height / 6) + 300) && y > (height / 6)) {
+                                gameModule.q2.add(gameModule.q1.remove(i));
+                                myQnumber++;
+                                choosing = false;
+                            }
+                        } else {
+                            if (x > ((Width / 5) * (i - 5) + 10) && x < ((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
+                                    && y < 300 && y > 0) {
+                                gameModule.q2.add(gameModule.q1.remove(i));
+                                myQnumber++;
+                                choosing = false;
+                            }
+                        }
+                    }
+                }
+                else if(choosing && player==1)
+                {
+                    //בחר לפני באביר
+                    for (int i = 0; i < gameModule.q2.size(); i++) {
+
+                        if (i >= 5) {
+                            if (x > ((Width / 5) * (i - 5) + 10) && x < ((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
+                                    && y < ((height / 6) + 300) && y > (height / 6))
+                            {
+                                gameModule.q1.add(gameModule.q2.remove(i));
+                                myQnumber++;
+                                choosing=false;
+                            }
+                        }
+                        else {
+                            if (x>((Width / 5) * (i - 5) + 10) && x<((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
+                                    && y<300 && y>0)
+                            {
+                                gameModule.q1.add(gameModule.q2.remove(i));
+                                myQnumber++;
+                                choosing=false;
+                            }
+                        }
+                    }
+                }
+                //גם לא בחר באביר לפני ולכן לא לחץ עם שום קלף שהוא ראשי ללחוץ עליו
+                else
+                    return true;
             }
 
             if(player==1 )
@@ -393,6 +443,27 @@ public class BoardGame extends View {
                         QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
                         dialog.show();
                         gameModule.ChangeCard(1, selectedCard);
+                    }
+                    else if (GameModule.player1.get(selectedCard).getType().equals("knight"))
+                    {
+                        if(gameModule.q2.size()!=0)
+                        {
+                            choosing = true;
+                            Toast.makeText(context, "בחר מלכה מקלפיו של השחקן השני", Toast.LENGTH_SHORT).show();
+                        }
+                        gameModule.ChangeCard(1, selectedCard);
+                        ApdateQueen();
+                        return true;
+                    }
+                    else if (GameModule.player1.get(selectedCard).getType().equals("dragon"))
+                    {
+                        if((myQnumber<gameModule.q1.size() && player==1) &&
+                                gameModule.trash.get(gameModule.trash.size()-1).getType().equals("knight"))
+                        {
+                            gameModule.q1.add(gameModule.q2.remove(gameModule.q2.size()-1));
+                        }
+                        gameModule.ChangeCard(1, selectedCard);
+
                     }
                     else
                     {
@@ -477,9 +548,27 @@ public class BoardGame extends View {
                             dialog.show();
                             gameModule.ChangeCard(2, selectedCard);
                         }
+                        else if (GameModule.player2.get(selectedCard).getType().equals("knight"))
+                        {//בחירה של השחקן באביר כדי לגנות מלכה
+                            if(gameModule.q1.size()!=0)
+                            {
+                                choosing = true;
+                                Toast.makeText(context, "בחר מלכה מקלפיו של השחקן השני", Toast.LENGTH_SHORT).show();
+                            }
+                            gameModule.ChangeCard(2, selectedCard);
+                        }
+                        else if (GameModule.player2.get(selectedCard).getType().equals("dragon"))
+                        {
+                            if((myQnumber<gameModule.q2.size() && player==2) &&
+                                    gameModule.trash.get(gameModule.trash.size()-1).getType().equals("knight"))
+                            {
+                                gameModule.q2.add(gameModule.q1.remove(gameModule.q1.size()-1));
+                            }
+                            gameModule.ChangeCard(2, selectedCard);
+
+                        }
                         else
                         {
-                            //בחירה של השחקן באביר כדי לגנות מלכה
                             //בחירה של השחקן במספר או
                             // לזרוק קלף ללא ביצוע הפעולה (כאשר לשחקן השני אין מלכות או שלא הופעל אביר מהצד השני)
                             for (int i = 0; i < selectedCardsNum.size(); i++) {
@@ -513,22 +602,25 @@ public class BoardGame extends View {
     public void SetNewMove() {
         //ציור מחדש של הלוח
         invalidate();
-        //isWin();
-
-
-
+        if(( (myQnumber<gameModule.q1.size() && player==1) || (myQnumber<gameModule.q2.size() && player==2) )
+        && gameModule.trash!=null)
+        {
+            if(gameModule.trash.get(gameModule.trash.size()-1).getType().equals("knight"))
+                Toast.makeText(context, "נגנבה לך מלכה! השתמש בדרקון אם יש לך על מנת להחזיר אותה", Toast.LENGTH_SHORT).show();
+        }
     }
     public static void Apdate(){
-
-        //הפעולה סטטית על מנת שיהיה אפשר להשתמש בה בדיאלוג של המלכות.
-        //מחיקה של הערכים בפיירבייס על מנת לשים את המערכים מחדש
+        if (player==1)
+            myQnumber=gameModule.q1.size();
+        else
+            myQnumber=gameModule.q2.size();
         GameModule.turnCounter=1-GameModule.turnCounter;
+        //מחיקה של הערכים בפיירבייס על מנת לשים את המערכים מחדש
         gameModule.DecksClear();
         //השמה מחדש של הערכין בפיירבייס
         gameModule.SetApdateDecks();
-
-
     }
+
     private void isWin(){
         if (gameModule.Win()>0){
             int win=gameModule.Win();
@@ -556,6 +648,11 @@ public class BoardGame extends View {
 
     }
     public static void ApdateQueen() {
+        //נקנה מלכה ולכן מעדכן את מספר המלכות עבור השחקן
+        if (player==1)
+            myQnumber=gameModule.q1.size();
+        else
+            myQnumber=gameModule.q2.size();
         gameModule.DecksClear();
         //השמה מחדש של הערכין בפיירבייס
         gameModule.SetApdateDecks();
