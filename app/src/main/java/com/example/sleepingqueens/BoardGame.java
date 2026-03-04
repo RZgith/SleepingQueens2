@@ -334,47 +334,27 @@ public class BoardGame extends View {
                 if(choosing && player==2) {
                     for (int i = 0; i < gameModule.q1.size(); i++) {
 
-                        if (i >= 5) {
-                            if (x > ((Width / 5) * (i - 5) + 10) && x < ((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
-                                    && y < ((height / 6) + 300) && y > (height / 6)) {
-                                gameModule.q2.add(gameModule.q1.remove(i));
-                                myQnumber++;
-                                choosing = false;
-                            }
-                        } else {
-                            if (x > ((Width / 5) * (i - 5) + 10) && x < ((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
-                                    && y < 300 && y > 0) {
-                                gameModule.q2.add(gameModule.q1.remove(i));
-                                myQnumber++;
-                                choosing = false;
-                            }
+                        if (x >= gameModule.q1.get(i).getX() && x <= (gameModule.q1.get(i).getX() + (Width / 5) - 10) &&
+                                y >= gameModule.q1.get(i).getY() && y <= (gameModule.q1.get(i).getY() + 300)) {
+                            gameModule.q2.add(gameModule.q1.remove(i));
+                            myQnumber++;
                         }
                     }
+                    choosing = false;
                 }
                 else if(choosing && player==1)
                 {
                     //בחר לפני באביר
                     for (int i = 0; i < gameModule.q2.size(); i++) {
 
-                        if (i >= 5) {
-                            if (x > ((Width / 5) * (i - 5) + 10) && x < ((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
-                                    && y < ((height / 6) + 300) && y > (height / 6))
-                            {
-                                gameModule.q1.add(gameModule.q2.remove(i));
-                                myQnumber++;
-                                choosing=false;
-                            }
-                        }
-                        else {
-                            if (x>((Width / 5) * (i - 5) + 10) && x<((Width / 5) * (i - 5) + 10 + Width / 5 - 10)
-                                    && y<300 && y>0)
-                            {
-                                gameModule.q1.add(gameModule.q2.remove(i));
-                                myQnumber++;
-                                choosing=false;
-                            }
+                        if (x >= gameModule.q2.get(i).getX() && x <= (gameModule.q2.get(i).getX() + (Width / 5) - 10) &&
+                                y >= gameModule.q2.get(i).getY() && y <= (gameModule.q2.get(i).getY() + 300)) {
+                            gameModule.q1.add(gameModule.q2.remove(i));
+                            myQnumber++;
                         }
                     }
+                    choosing = false;
+
                 }
                 //גם לא בחר באביר לפני ולכן לא לחץ עם שום קלף שהוא ראשי ללחוץ עליו
                 else
@@ -450,10 +430,12 @@ public class BoardGame extends View {
                         {
                             choosing = true;
                             Toast.makeText(context, "בחר מלכה מקלפיו של השחקן השני", Toast.LENGTH_SHORT).show();
+                            gameModule.ChangeCard(1, selectedCard);
+                            ApdateQueen();
+                            return true;
                         }
                         gameModule.ChangeCard(1, selectedCard);
-                        ApdateQueen();
-                        return true;
+
                     }
                     else if (GameModule.player1.get(selectedCard).getType().equals("dragon"))
                     {
@@ -554,6 +536,9 @@ public class BoardGame extends View {
                             {
                                 choosing = true;
                                 Toast.makeText(context, "בחר מלכה מקלפיו של השחקן השני", Toast.LENGTH_SHORT).show();
+                                gameModule.ChangeCard(2, selectedCard);
+                                ApdateQueen();
+                                return true;
                             }
                             gameModule.ChangeCard(2, selectedCard);
                         }
