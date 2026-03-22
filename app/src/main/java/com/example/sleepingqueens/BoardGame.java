@@ -23,7 +23,8 @@ public class BoardGame extends View {
     private int Width;
     private int height;
     private static int myQnumber=0;
-    private boolean firstTime=true,choosing=false;
+    protected static boolean firstTime=true;
+    protected boolean choosing=false;
     private static int player;
     public static boolean IsFbRead = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
@@ -34,7 +35,7 @@ public class BoardGame extends View {
         gameModule= new GameModule(context);
         this.player=player;
 
-        if(player==1 & firstTime){
+        if(player==1 && firstTime){
             gameModule.NewGame();
             gameModule.startGame1();
 
@@ -331,34 +332,40 @@ public class BoardGame extends View {
             {
                 //אם מה שנלחץ אינו קלף וגם לא הכפתור של ה-exercise
                 //בחר לפני באביר
-                if(choosing && player==2) {
-                    for (int i = 0; i < gameModule.q1.size(); i++) {
+                if(choosing){
+                    if(player==2) {
+                        for (int i = 0; i < gameModule.q1.size(); i++) {
 
-                        if (x >= gameModule.q1.get(i).getX() && x <= (gameModule.q1.get(i).getX() + (Width / 5) - 10) &&
-                                y >= gameModule.q1.get(i).getY() && y <= (gameModule.q1.get(i).getY() + 300)) {
-                            gameModule.q2.add(gameModule.q1.remove(i));
-                            myQnumber++;
+                            if (x >= gameModule.q1.get(i).getX() && x <= (gameModule.q1.get(i).getX() + (Width / 5) - 10) &&
+                                    y >= gameModule.q1.get(i).getY() && y <= (gameModule.q1.get(i).getY() + 300)) {
+                                gameModule.q2.add(gameModule.q1.remove(i));
+                                myQnumber++;
+                                choosing = false;
+                                Apdate();
+                                isWin();
+                            }
                         }
                     }
-                    choosing = false;
-                }
-                else if(choosing && player==1)
-                {
-                    //בחר לפני באביר
-                    for (int i = 0; i < gameModule.q2.size(); i++) {
+                    else
+                    {
+                        //בחר לפני באביר
+                        for (int i = 0; i < gameModule.q2.size(); i++) {
 
-                        if (x >= gameModule.q2.get(i).getX() && x <= (gameModule.q2.get(i).getX() + (Width / 5) - 10) &&
-                                y >= gameModule.q2.get(i).getY() && y <= (gameModule.q2.get(i).getY() + 300)) {
-                            gameModule.q1.add(gameModule.q2.remove(i));
-                            myQnumber++;
+                            if (x >= gameModule.q2.get(i).getX() && x <= (gameModule.q2.get(i).getX() + (Width / 5) - 10) &&
+                                    y >= gameModule.q2.get(i).getY() && y <= (gameModule.q2.get(i).getY() + 300)) {
+                                gameModule.q1.add(gameModule.q2.remove(i));
+                                myQnumber++;
+                                choosing = false;
+                                Apdate();
+                                isWin();
+                            }
                         }
+
                     }
-                    choosing = false;
 
                 }
-                //גם לא בחר באביר לפני ולכן לא לחץ עם שום קלף שהוא ראשי ללחוץ עליו
-                else
-                    return true;
+                return true;
+
             }
 
             if(player==1 )
@@ -439,7 +446,7 @@ public class BoardGame extends View {
                     }
                     else if (GameModule.player1.get(selectedCard).getType().equals("dragon"))
                     {
-                        if((myQnumber<gameModule.q1.size() && player==1) &&
+                        if((myQnumber>gameModule.q1.size() && player==1) &&
                                 gameModule.trash.get(gameModule.trash.size()-1).getType().equals("knight"))
                         {
                             gameModule.q1.add(gameModule.q2.remove(gameModule.q2.size()-1));
@@ -544,7 +551,7 @@ public class BoardGame extends View {
                         }
                         else if (GameModule.player2.get(selectedCard).getType().equals("dragon"))
                         {
-                            if((myQnumber<gameModule.q2.size() && player==2) &&
+                            if((myQnumber>gameModule.q2.size() && player==2) &&
                                     gameModule.trash.get(gameModule.trash.size()-1).getType().equals("knight"))
                             {
                                 gameModule.q2.add(gameModule.q1.remove(gameModule.q1.size()-1));
@@ -587,8 +594,8 @@ public class BoardGame extends View {
     public void SetNewMove() {
         //ציור מחדש של הלוח
         invalidate();
-        if(( (myQnumber<gameModule.q1.size() && player==1) || (myQnumber<gameModule.q2.size() && player==2) )
-        && gameModule.trash!=null)
+        if(( (myQnumber>gameModule.q1.size() && player==1) || (myQnumber>gameModule.q2.size() && player==2) )
+        && gameModule.trash!=null && !gameModule.trash.isEmpty())
         {
             if(gameModule.trash.get(gameModule.trash.size()-1).getType().equals("knight"))
                 Toast.makeText(context, "נגנבה לך מלכה! השתמש בדרקון אם יש לך על מנת להחזיר אותה", Toast.LENGTH_SHORT).show();
