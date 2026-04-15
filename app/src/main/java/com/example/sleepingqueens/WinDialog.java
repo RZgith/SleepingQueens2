@@ -15,6 +15,7 @@ public class WinDialog extends Dialog implements View.OnClickListener {
     private int player,win;
     private TextView et;
     private Button btnOK;
+
     public WinDialog(@NonNull Context context,int player,int win) {
         super(context);
         this.context=context;

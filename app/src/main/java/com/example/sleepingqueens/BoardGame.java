@@ -24,7 +24,7 @@ public class BoardGame extends View {
     private int height;
     private static int myQnumber=0;
     protected static boolean firstTime=true;
-    protected boolean choosing=false;
+    protected boolean choosing=false,middleGame;
     private static int player;
     public static boolean IsFbRead = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
@@ -34,19 +34,29 @@ public class BoardGame extends View {
         this.context=context;
         gameModule= new GameModule(context);
         this.player=player;
-
-        if(player==1 && firstTime){
-            gameModule.NewGame();
+        if (player==1 && firstTime){
+            middleGame=true;
             gameModule.startGame1();
-
         }
-        if(player==2){
-            gameModule.NewGame();
+        /*else if (player==1 && middleGame) {
+            IsFbRead = false;
             gameModule.startGame2();
-
-
+            firstTime=true;
+        }*/
+        else if (player==1 && !firstTime) {
+            gameModule.secondStartGame1();
+            firstTime=true;
+            middleGame=true;
         }
-
+        if(player==2 && !middleGame){
+            gameModule.startGame2();
+            firstTime=true;
+        }
+        /*else if (player==2 && middleGame) {
+            IsFbRead = false;
+            gameModule.startGame2();
+            firstTime=true;
+        }*/
 
 
     }
@@ -56,150 +66,8 @@ public class BoardGame extends View {
         if (firstTime){
             Width=canvas.getWidth();
             height=canvas.getHeight();
-
-
         }
         firstTime=false;
-
-    /*    if(!IsFbRead)
-            return;
-
-        // Paint לציור המלבן (רקע הכפתור)
-        Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        rectPaint.setColor(Color.GRAY);          // צבע המלבן
-        rectPaint.setStyle(Paint.Style.FILL);    // ציור עם מילוי מלא
-
-        // Paint לציור הטקסט
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.BLACK);          // צבע הטקסט
-        textPaint.setTextSize(42f);               // גודל הטקסט בפיקסלים
-        textPaint.setTextAlign(Paint.Align.CENTER); // יישור אופקי למרכז
-
-        // קואורדינטות המלבן על המסך
-        float left = 0;   // צד שמאל של המלבן
-        float top = height-4*(height/6);    // צד עליון של המלבן
-        float right = left+300;  // צד ימין של המלבן
-        float bottom = top+160; // צד תחתון של המלבן
-
-        // ציור המלבן על ה־Canvas
-        canvas.drawRect(left, top, right, bottom, rectPaint);
-
-        // חישוב נקודת האמצע האופקית של המלבן
-        float centerX = (left + right) / 2;
-
-        // חישוב נקודת האמצע האנכית של המלבן
-        // descent() ו־ascent() משמשים ליישור אנכי מדויק של הטקסט
-        float centerY = (top + bottom) / 2
-                - (textPaint.descent() + textPaint.ascent()) / 2;
-
-        // ציור הטקסט במרכז המלבן
-        canvas.drawText("Exercise", centerX, centerY, textPaint);
-
-        if(player==1)
-        {
-            for (int i = 0; i < 5; i++) {
-                    GameModule.player1.get(i).setX((Width / 5 + 10) * i + 10);
-                    GameModule.player1.get(i).setY(height - (height / 6));
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.player1.get(i).getBitmap());
-                    bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
-                    GameModule.player1.get(i).draw(canvas, bitmap);
-            }
-            if (GameModule.q1 !=null){
-                    //ציור של הקלפי מלכות של השחקן
-                for (int i = 0; i < GameModule.q1.size(); i++) {
-                    if(i>5){
-                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
-                            GameModule.q1.get(i).setY(height - 3*(height / 6));
-                            GameModule.q1.get(i).setX((Width / 5 + 10) * (i-5) + 10);
-                    }
-                    else {
-                            GameModule.q1.get(i).setX((Width / 5 + 10) * i + 10);
-                            GameModule.q1.get(i).setY(height - 2*(height / 6));
-                    }
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q1.get(i).getBitmap());
-                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
-                        GameModule.q1.get(i).draw(canvas, bitmap);
-                }
-            }
-            if (GameModule.q2 !=null){
-                    //ציור של הקלפי מלכות של השחקן
-                for (int i = 0; i < GameModule.q2.size(); i++) {
-                    if(i>5){
-                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
-                            GameModule.q2.get(i).setY(0);
-                            GameModule.q2.get(i).setX((Width / 5 + 10) * (i-5) + 10);
-                    }
-                    else {
-                            GameModule.q2.get(i).setX((Width / 5 + 10) * i + 10);
-                            GameModule.q2.get(i).setY(0);
-                    }
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q2.get(i).getBitmap());
-                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
-                        GameModule.q2.get(i).draw(canvas, bitmap);
-                }
-            }
-        }
-        else {
-                for (int i = 0; i < 5; i++) {
-                    GameModule.player2.get(i).setX((Width / 5 + 10) * i + 10);
-                    GameModule.player2.get(i).setY(height - (height / 6));
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.player2.get(i).getBitmap());
-                    bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
-                    GameModule.player2.get(i).draw(canvas, bitmap);
-                }
-                if (GameModule.q2 !=null){
-                    //ציור של הקלפי מלכות של השחקן
-                    for (int i = 0; i < GameModule.q2.size(); i++) {
-                        if(i>5){
-                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
-                            GameModule.q2.get(i).setY(height - 3*(height / 6));
-                            GameModule.q2.get(i).setX((Width / 5 + 10) * (i-5) + 10);
-                        }
-                        else {
-                            GameModule.q2.get(i).setX((Width / 5 + 10) * i + 10);
-                            GameModule.q2.get(i).setY(height - 2*(height / 6));
-                        }
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q2.get(i).getBitmap());
-                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
-                        GameModule.q2.get(i).draw(canvas, bitmap);
-                    }
-                }
-                if (GameModule.q1 !=null){
-                    //ציור של הקלפי מלכות של השחקן
-                    for (int i = 0; i < GameModule.q1.size(); i++) {
-                        if(i>5){
-                            //בנפרד בגלל שצריך לצייר את זה בשורה נפרדת
-                            GameModule.q1.get(i).setY(0);
-                            GameModule.q1.get(i).setX((Width / 5 + 10) * (i-5) + 10);
-                        }
-                        else {
-                            GameModule.q1.get(i).setX((Width / 5 + 10) * i + 10);
-                            GameModule.q1.get(i).setY(0);
-                        }
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), GameModule.q1.get(i).getBitmap());
-                        bitmap = Bitmap.createScaledBitmap(bitmap, Width / 5 - 10, 300, false);
-                        GameModule.q1.get(i).draw(canvas, bitmap);
-                    }
-                }
-        }
-
-            Card deck=new Card("deck",R.drawable.regularback);
-            deck.setY(height-4*(height/6));
-            deck.setX(Width/2-(Width/5+15));//50
-            Bitmap bitmap= BitmapFactory.decodeResource(getResources(),deck.getBitmap());
-            bitmap = Bitmap.createScaledBitmap(bitmap,Width/5-10,300,false);
-            deck.draw(canvas,bitmap);
-
-           /* if(gameModule.trash!=null){
-                int c=gameModule.trash.size()-1;
-                gameModule.trash.get(c).setY(height-4*(height/6));
-                gameModule.trash.get(c).setX(Width/2+15);
-                Bitmap bitmap2= BitmapFactory.decodeResource(getResources(),gameModule.trash.get(c).getBitmap());
-                bitmap2 = Bitmap.createScaledBitmap(bitmap2,Width/5-10,300,false);
-                gameModule.trash.get(c).draw(canvas,bitmap2);
-            }*/
-
-
 
         // הגנה: אם הנתונים טרם נקראו מ-Firebase, לא מציירים כלום
         if(!IsFbRead) return;
@@ -617,20 +485,22 @@ public class BoardGame extends View {
         if (gameModule.Win()>0){
             int win=gameModule.Win();
             if (win==1){
+                middleGame=false;
                 Toast.makeText(context, "player 1 won!!", Toast.LENGTH_SHORT).show();
                 if(GameModule.turnCounter % 2 == player % 2)
                     GameModule.turnCounter=1-GameModule.turnCounter;
                 ApdateQueen();
-                GameModule.NewGame();
+                //GameModule.NewGame();
                 WinDialog dialog = new WinDialog(context, player, win);
                 dialog.show();
             }
             else if (win==2) {
+                middleGame=false;
                 Toast.makeText(context, "player 2 won!!", Toast.LENGTH_SHORT).show();
                 if(GameModule.turnCounter % 2 == player % 2)
                     GameModule.turnCounter=1-GameModule.turnCounter;
                 ApdateQueen();
-                GameModule.NewGame();
+                //GameModule.NewGame();
                 WinDialog dialog = new WinDialog(context, player, win);
                 dialog.show();
             }

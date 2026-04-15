@@ -130,9 +130,8 @@ public class GameModule {
 
 
     }
-
-    public void startGame1() {
-
+    public void secondStartGame1() {
+        NewGame();
         setMainDeck();
         setQueens();
         shuffle();
@@ -144,17 +143,46 @@ public class GameModule {
             player2.add(mainDeck.remove(0));
         }
         turnCounter=1;
-       SetApdateDecks();
+        SetApdateDecksNewGame();
+
+    }
+    public void startGame1() {
+        NewGame();
+        setMainDeck();
+        setQueens();
+        shuffle();
+        shuffleQueens();
+        player1.clear();
+        player2.clear();
+        for (int i = 0; i < 5; i++) {
+            player1.add(mainDeck.remove(0));
+            player2.add(mainDeck.remove(0));
+        }
+        turnCounter=1;
+       SetApdateDecksNewGame();
 
     }
     public void startGame2(){
         instace = FbModule.getInstance(context);
     }
 
+    public void SetApdateDecksNewGame(){
 
+        instace = FbModule.getInstance(context);
+        DecksClear();
+        instace.setCounter(turnCounter);
+        instace.setDeck(mainDeck,"mainDeck");
+        instace.setDeckQ(queens,"queens");
+        instace.setDeckQ(q1,"q1");
+        instace.setDeck(player1,"player1");
+        instace.setDeckQ(q2,"q2");
+        instace.setDeck(player2,"player2");
+        instace.setDeck(trash,"trash");
+    }
     public void SetApdateDecks(){
 
         instace = FbModule.getInstance(context);
+        DecksClear();
         instace.setCounter(turnCounter);
         instace.setDeck(mainDeck,"mainDeck");
         instace.setDeckQ(queens,"queens");
