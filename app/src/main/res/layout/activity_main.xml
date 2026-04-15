@@ -25,7 +25,7 @@
         android:textSize="30dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
-        android:text="Play against computer"
+        android:text="Instructions"
         android:id="@+id/VSComputerbtn"
         >
 
