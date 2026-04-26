@@ -35,6 +35,7 @@ public class BoardGame extends View {
     Handler handler;
     ThreadGame threadGame;
     Card deck1;
+    int selectedCard=-1;
     private boolean isRun = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
     private int counter = 0;
@@ -76,45 +77,61 @@ public class BoardGame extends View {
         threadGame = new ThreadGame();
         threadGame.start(); // runs as thread the run() method
 
+
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message message) {
+                // 1. הגנה: אם הרשימה התרוקנה, עצור הכל
+                if (selectedCardsNum.isEmpty()) {
+                    isRun = false;
+                    return false;
+                }
+
                 counter++;
 
-                if (player==1 && selectedCardsNum!=null && !selectedCardsNum.isEmpty())
-                {
-                    float X=gameModule.player1.get(selectedCardsNum.get(0)).getX();
-                    float Y=gameModule.player1.get(selectedCardsNum.get(0)).getY();
-                    float dx=(X- deck1.getX())/10;
-                    float dy=(Y- deck1.getY())/10;
-                    deck1.setX(deck1.getX()+dx);
-                    deck1.setY(deck1.getY()+dy);
-                    //deck1.move(X,Y);
-                }
-                if (player==2 && selectedCardsNum!=null && !selectedCardsNum.isEmpty())
-                {
-                    float X=gameModule.player2.get(selectedCardsNum.get(0)).getX();
-                    float Y=gameModule.player2.get(selectedCardsNum.get(0)).getY();
-                    float dx=(X- deck1.getX())/10;
-                    float dy=(Y- deck1.getY())/10;
-                    deck1.setX(deck1.getX()+dx);
-                    deck1.setY(deck1.getY()+dy);
-                    //deck1.move(X,Y);
-                }
-                if(counter == 10){
+                // 2. קבלת האינדקס הנוכחי שבו מטפלים
+                int currentIdx = selectedCardsNum.get(0);
 
-                    isRun = false;
-                    counter=0;
-                    if (player==1)
-                        gameModule.ChangeCard(1, selectedCardsNum.get(0));
+                // 3. הגנה: וודא שהאינדקס קיים ביד השחקן (למניעת OutOfBounds מול gameModule)
+                List<CardNumbers> currentPlayerHand = (player == 1) ? GameModule.player1 : GameModule.player2;
+                if (currentIdx >= currentPlayerHand.size()) {
+                    selectedCardsNum.remove(0); // אינדקס לא תקין, הסר אותו
+                    return false;
+                }
+
+                // חישוב תנועה
+                float targetX = currentPlayerHand.get(currentIdx).getX();
+                float targetY = currentPlayerHand.get(currentIdx).getY();
+                float dx = (targetX - deck1.getX()) / 10;
+                float dy = (targetY - deck1.getY()) / 10;
+                deck1.setX(deck1.getX() + dx);
+                deck1.setY(deck1.getY() + dy);
+
+                if (counter == 10) {
+                    counter = 0;
+
+                    // 1. עדכון הלוגיקה של המשחק - החלפת הקלף בזיכרון
+                    gameModule.ChangeCard(player, currentIdx);
+
+                    // 2. הסרת האינדקס שסיים אנימציה
                     selectedCardsNum.remove(0);
+
+                    // 3. איפוס מיקום הקופה לאנימציה הבאה
                     deck1.setX(Width / 2 - (Width / 5 + 15));
                     deck1.setY(height - 4 * (height / 6));
 
+                    // 4. בדיקה האם סיימנו את כל האנימציות של התור
+                    if (selectedCardsNum.isEmpty()) {
+                        isRun = false;
 
+                        // --- כאן קורה הקסם ---
+                        // רק עכשיו, כשכל הקלפים הוחלפו בזיכרון, נעדכן את Firebase ונסיים תור
+                        Apdate();
+                        isWin();
+                    }
                 }
 
-                invalidate(); // clear the canvas and calls to onDraw()
+                invalidate();
                 return false;
             }
         });
@@ -254,7 +271,7 @@ public class BoardGame extends View {
             // מיקום הנגיעה על המסך
             float x = event.getX();
             float y = event.getY();
-            int selectedCard=-1;
+            selectedCard=-1;
             for (int i = 0; i <5 ; i++) {
                 if(x>((Width/5)*i+10) && x<((Width/5)*i+10)+(Width/5)
                         & y>(height-(height/6)) & y<((height-(height/6))+300))
@@ -289,6 +306,7 @@ public class BoardGame extends View {
 
                             if (x >= gameModule.q2.get(i).getX() && x <= (gameModule.q2.get(i).getX() + (Width / 5) - 10) &&
                                     y >= gameModule.q2.get(i).getY() && y <= (gameModule.q2.get(i).getY() + 300)) {
+
                                 gameModule.q1.add(gameModule.q2.remove(i));
                                 myQnumber++;
                                 choosing = false;
@@ -350,7 +368,7 @@ public class BoardGame extends View {
                                 deck1.setX(Width / 2 - (Width / 5 + 15));
                                 deck1.setY(height - 4 * (height / 6));
                                 isRun = true;
-                                gameModule.ChangeCard(1, selectedCardsNum.get(i));
+                                //    gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
                         else {
@@ -374,7 +392,11 @@ public class BoardGame extends View {
 
                         QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q1);
                         dialog.show();
-                        gameModule.ChangeCard(1, selectedCard);
+                        selectedCardsNum.add(selectedCard);
+                        isRun=true;
+                        //gameModule.ChangeCard(1, selectedCard);
+                        //Apdate();
+                        //isWin();
                     }
                     else if (GameModule.player1.get(selectedCard).getType().equals("knight"))
                     {
@@ -382,11 +404,16 @@ public class BoardGame extends View {
                         {
                             choosing = true;
                             Toast.makeText(context, "בחר מלכה מקלפיו של השחקן השני", Toast.LENGTH_SHORT).show();
+                            //isRun = true;
                             gameModule.ChangeCard(1, selectedCard);
+                            //selectedCardsNum.add(selectedCard);
                             ApdateQueen();
                             return true;
                         }
-                        gameModule.ChangeCard(1, selectedCard);
+                        selectedCardsNum.add(selectedCard);
+                        isRun = true;
+                        //gameModule.ChangeCard(1, selectedCard);
+
 
                     }
                     else if (GameModule.player1.get(selectedCard).getType().equals("dragon"))
@@ -396,7 +423,9 @@ public class BoardGame extends View {
                         {
                             gameModule.q1.add(gameModule.q2.remove(gameModule.q2.size()-1));
                         }
-                        gameModule.ChangeCard(1, selectedCard);
+                        selectedCardsNum.add(selectedCard);
+                        isRun = true;
+                        //gameModule.ChangeCard(1, selectedCard);
 
                     }
                     else
@@ -430,34 +459,39 @@ public class BoardGame extends View {
                         Log.d("Roni",  " exercise2" );
                         //אם השחקן לחץ על exercise
                         if (selectedCardsNum.size() == 1) {
-                            gameModule.ChangeCard(2, selectedCardsNum.get(0));
+                            isRun = true;
+                            //gameModule.ChangeCard(2, selectedCardsNum.get(0));
                             //השחקן רוצב לזרוק קלף אחד
                         }
                         else {
                             //השחקן רוצה לעשות תרגיל או לזרוק דאבל
                             if (selectedCardsNum.size() == 2 & gameModule.DoubleNum((CardNumbers) GameModule.player2.get(selectedCardsNum.get(0)), (CardNumbers) GameModule.player2.get(selectedCardsNum.get(1))))
                             {
-                                for (int i = 0; i < selectedCardsNum.size(); i++) {
-                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                for (int i = 0; i < 2; i++) {
+                                    isRun = true;
+                                    //gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
                             else if (selectedCardsNum.size() == 3 &&  gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),null,null))
                             {
-                                for (int i = 0; i < selectedCardsNum.size(); i++) {
-                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                for (int i = 0; i < 3; i++) {
+                                    isRun = true;
+                                    //gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
                             else if (selectedCardsNum.size() == 4 && gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),null))
                             {
-                                for (int i = 0; i < selectedCardsNum.size(); i++) {
-                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                for (int i = 0; i < 4; i++) {
+                                    isRun = true;
+                                    //gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
                             else if (selectedCardsNum.size() == 5 && gameModule.AddExercise((CardNumbers)gameModule.player2.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player2.get(selectedCardsNum.get(4))))
                             {
 
-                                for (int i = 0; i < selectedCardsNum.size(); i++) {
-                                    gameModule.ChangeCard(2, selectedCardsNum.get(i));
+                                for (int i = 0; i < 5; i++) {
+                                    isRun = true;
+                                    //gameModule.ChangeCard(2, selectedCardsNum.get(i));
                                 }
                             }
                             else {
@@ -470,7 +504,7 @@ public class BoardGame extends View {
 
                         }
                         //מחיקה של הערכים על מנת התחלה של תור חדש
-                        selectedCardsNum.clear();
+                        //selectedCardsNum.clear();
                     }
                     else
                     {
@@ -480,7 +514,11 @@ public class BoardGame extends View {
                             Log.d("Roni", "king2 ");
                             QueenDialog dialog = new QueenDialog(context, gameModule.queens, gameModule.q2);
                             dialog.show();
-                            gameModule.ChangeCard(2, selectedCard);
+                            selectedCardsNum.add(selectedCard);
+                            isRun = true;
+                            //gameModule.ChangeCard(2, selectedCard);
+                            //Apdate();
+                            //isWin();
                         }
                         else if (GameModule.player2.get(selectedCard).getType().equals("knight"))
                         {//בחירה של השחקן באביר כדי לגנות מלכה
@@ -488,11 +526,14 @@ public class BoardGame extends View {
                             {
                                 choosing = true;
                                 Toast.makeText(context, "בחר מלכה מקלפיו של השחקן השני", Toast.LENGTH_SHORT).show();
+                                //selectedCardsNum.add(selectedCard);
                                 gameModule.ChangeCard(2, selectedCard);
                                 ApdateQueen();
                                 return true;
                             }
-                            gameModule.ChangeCard(2, selectedCard);
+                            selectedCardsNum.add(selectedCard);
+                            isRun = true;
+                            //gameModule.ChangeCard(2, selectedCard);
                         }
                         else if (GameModule.player2.get(selectedCard).getType().equals("dragon"))
                         {
@@ -501,7 +542,11 @@ public class BoardGame extends View {
                             {
                                 gameModule.q2.add(gameModule.q1.remove(gameModule.q1.size()-1));
                             }
-                            gameModule.ChangeCard(2, selectedCard);
+                            selectedCardsNum.add(selectedCard);
+                            isRun = true;
+                            //gameModule.ChangeCard(2, selectedCard);
+                            //Apdate();
+                            //isWin();
 
                         }
                         else
@@ -524,8 +569,8 @@ public class BoardGame extends View {
                     }
 
                 }
-            Apdate();
-            isWin();
+            //Apdate();
+            //isWin();
 
 
 
