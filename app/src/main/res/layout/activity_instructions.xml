@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/game_background"
+    tools:context=".InstructionsActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="הוראות"
+        android:layout_gravity="center"
+        android:textSize="30dp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="מטרת המשחק"
+        android:layout_gravity="right"
+        android:textSize="25dp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="להיות השחקן הראשון שצובר 55 נקודות"
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="סוגי הקלפים"
+        android:layout_gravity="right"
+        android:textSize="25dp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="מלכות (12 קלפים): נמצאות במרכז כשהן 'ישנות' (הפוכות). לכל מלכה ערך נקודות שונה."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="מלך: משמש כדי להעיר (לקחת) מלכה אחת מהמרכז."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="דרקון: משמש כהגנה בלבד – עוצר את האביר מלגנוב לך מלכה."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="קלפי מספרים (1-10): משמשים להחלפת קלפים מהיד כדי לנסות להשיג קלפי פעולה."
+        android:textSize="20dp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="מהלך המשחק"
+        android:layout_gravity="right"
+        android:textSize="25dp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="בכל תור, שחקן מבצע פעולה אחת מתוך האפשרויות הבאות,
+ולאחר מכן משלים קלפים מהקופה כך שתמיד יהיו לו 5 קלפים ביד:"
+        android:textSize="20dp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="הערת מלכה (באמצעות מלך)
+מניחים קלף מלך בערמת הזריקה, ובוחרים מלכה אחת. המלכה תוצג הפוכה לפניכם."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="גניבת מלכה (באמצעות אביר)
+מניחים קלף אביר בערמת הזריקה ובוחרים שחקן אחר שיש לו מלכה."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="הגנה: השחקן שהותקף יכול להוריד מיד קלף דרקון מהיד שלו.
+אם עשה זאת, האביר נחסם והמלכה נשארת אצלו. שני השחקנים משלימים קלפים מהקופה.
+החלפת קלפי מספרים (כדי להשיג קלפים טובים יותר)."
+        android:textSize="20dp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:text="תוכלו להחליף קלפי מספרים בשלוש דרכים:"
+        android:textSize="23dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="קלף בודד: זורקים קלף מספר אחד ולוקחים אחד חדש."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="זוג: זורקים שני קלפי מספרים זהים (למשל שני קלפי '5') ולוקחים שניים חדשים."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="תרגיל חשבון: זורקים 3 קלפים או יותר שיוצרים משוואת חיבור.
+למשל: אם יש לכם 2, 3 ו-5, אתם זורקים את שלושתם כי 2+3=5, ולוקחים שלושה קלפים חדשים.
+"
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:text="הערה: על מנת להחליף קלפי מיספרים יש בסיום בחירתם ללחוץ על הכפתור שעליו כתוב Exercise."
+        android:textSize="20dp"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="בנוסף תוכלו לדעת אם זה תורכם או תור יריבכם לפי צבע הכפתור. טורקיז משמעו תורכם ואפור משמעו תור יריבכם."
+        android:textSize="20dp"></TextView>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:text="חזרה לעמוד הראשי"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:id="@+id/btn"></Button>
+
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
