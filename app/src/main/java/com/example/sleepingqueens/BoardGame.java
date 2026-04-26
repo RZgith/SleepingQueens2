@@ -35,7 +35,7 @@ public class BoardGame extends View {
     Handler handler;
     ThreadGame threadGame;
     Card deck1;
-    private boolean isRun = true;
+    private boolean isRun = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
     private int counter = 0;
 
@@ -45,6 +45,7 @@ public class BoardGame extends View {
         this.context=context;
         gameModule= new GameModule(context);
         this.player=player;
+        this.setBackgroundResource(R.drawable.game_background);
         if (player==1 && firstTime){
             middleGame=true;
             gameModule.startGame1();
@@ -79,11 +80,38 @@ public class BoardGame extends View {
             @Override
             public boolean handleMessage(@NonNull Message message) {
                 counter++;
-                if(counter == 10)
+
+                if (player==1 && selectedCardsNum!=null && !selectedCardsNum.isEmpty())
                 {
+                    float X=gameModule.player1.get(selectedCardsNum.get(0)).getX();
+                    float Y=gameModule.player1.get(selectedCardsNum.get(0)).getY();
+                    float dx=(X- deck1.getX())/10;
+                    float dy=(Y- deck1.getY())/10;
+                    deck1.setX(deck1.getX()+dx);
+                    deck1.setY(deck1.getY()+dy);
+                    //deck1.move(X,Y);
+                }
+                if (player==2 && selectedCardsNum!=null && !selectedCardsNum.isEmpty())
+                {
+                    float X=gameModule.player2.get(selectedCardsNum.get(0)).getX();
+                    float Y=gameModule.player2.get(selectedCardsNum.get(0)).getY();
+                    float dx=(X- deck1.getX())/10;
+                    float dy=(Y- deck1.getY())/10;
+                    deck1.setX(deck1.getX()+dx);
+                    deck1.setY(deck1.getY()+dy);
+                    //deck1.move(X,Y);
+                }
+                if(counter == 10){
+
                     isRun = false;
-                    //להזיז במוב
-                    deck1.setX(deck1.getX() +50);
+                    counter=0;
+                    if (player==1)
+                        gameModule.ChangeCard(1, selectedCardsNum.get(0));
+                    selectedCardsNum.remove(0);
+                    deck1.setX(Width / 2 - (Width / 5 + 15));
+                    deck1.setY(height - 4 * (height / 6));
+
+
                 }
 
                 invalidate(); // clear the canvas and calls to onDraw()
@@ -99,6 +127,8 @@ public class BoardGame extends View {
         if (firstTime){
             Width=canvas.getWidth();
             height=canvas.getHeight();
+            deck1.setX(Width / 2 - (Width / 5 + 15));
+            deck1.setY(height - 4 * (height / 6));
         }
         firstTime=false;
 
@@ -165,6 +195,8 @@ public class BoardGame extends View {
 
         //קלף של חבילה להזיז אותו בMOVE
         deck1.draw(canvas,deckBitmap);
+        /*deck1.setY(height - 4 * (height / 6));
+        deck1.setX(Width / 2 - (Width / 5 + 15));*/
 
         // --- ציור ערימת הזריקה (Trash) ---
         // בדיקה כפולה: 1) שהרשימה קיימת בזיכרון (לא Null) ו-2) שיש בה לפחות קלף אחד (לא ריקה)
@@ -282,33 +314,42 @@ public class BoardGame extends View {
                     //אם השחקן לחץ על exercise
                     Log.d("Roni",  " exercise1" );
                     if (selectedCardsNum.size() == 1) {
-                        gameModule.ChangeCard(1, selectedCardsNum.get(0));
+                        isRun = true;
+                       // gameModule.ChangeCard(1, selectedCardsNum.get(0));
                         //השחקן רוצב לזרוק קלף אחד
                     }
                     else {
                         //השחקן רוצה לעשות תרגיל או לזרוק דאבל
                         if (selectedCardsNum.size() == 2 && gameModule.DoubleNum((CardNumbers) GameModule.player1.get(selectedCardsNum.get(0)), (CardNumbers) GameModule.player1.get(selectedCardsNum.get(1))))
                         {
-                            for (int i = 0; i < selectedCardsNum.size(); i++) {
-                                gameModule.ChangeCard(1, selectedCardsNum.get(i));
+                            for (int i = 0; i < 2; i++) {
+                                isRun = true;
+                                //gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
                         else if (selectedCardsNum.size() == 3 &&  gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),null,null))
                         {
-                            for (int i = 0; i < selectedCardsNum.size(); i++) {
-                                gameModule.ChangeCard(1, selectedCardsNum.get(i));
+                            for (int i = 0; i < 3; i++) {
+
+                                isRun = true;
+                                //gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
                         else if (selectedCardsNum.size() == 4 && gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),null))
                         {
-                            for (int i = 0; i < selectedCardsNum.size(); i++) {
-                                gameModule.ChangeCard(1, selectedCardsNum.get(i));
+                            for (int i = 0; i < 4; i++) {
+
+                                isRun = true;
+                                //gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
                         else if (selectedCardsNum.size() == 5 && gameModule.AddExercise((CardNumbers)gameModule.player1.get(selectedCardsNum.get(0)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(1)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(2)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(3)),(CardNumbers)gameModule.player1.get(selectedCardsNum.get(4))))
                         {
 
-                            for (int i = 0; i < selectedCardsNum.size(); i++) {
+                            for (int i = 0; i < 5; i++) {
+                                deck1.setX(Width / 2 - (Width / 5 + 15));
+                                deck1.setY(height - 4 * (height / 6));
+                                isRun = true;
                                 gameModule.ChangeCard(1, selectedCardsNum.get(i));
                             }
                         }
@@ -322,7 +363,7 @@ public class BoardGame extends View {
 
                     }
                     //מחיקה של הערכים על מנת התחלה של תור חדש
-                    selectedCardsNum.clear();
+                    //selectedCardsNum.clear();
 
                 }
                 else
@@ -572,6 +613,9 @@ public class BoardGame extends View {
             }
         }
     }
+
+
+
 
 
 }

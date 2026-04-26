@@ -40,6 +40,12 @@ public class Card {
         return bitmap;
     }
 
+    public void move(float Xtarget,float Ytarget){
+        float dx=(Xtarget- this.x)/10;
+        float dy=(Ytarget- this.y)/10;
+        setX(x+dx);
+        setY(y+dy);
+    }
     public void draw(Canvas canvas,Bitmap bitmap){
         canvas.drawBitmap(bitmap,x,y,null);
     }
