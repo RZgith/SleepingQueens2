@@ -50,4 +50,6 @@ public class Card {
         canvas.drawBitmap(bitmap,x,y,null);
     }
 
+    public void setBitmap(int bitmap) {this.bitmap=bitmap;
+    }
 }

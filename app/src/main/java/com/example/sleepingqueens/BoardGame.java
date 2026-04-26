@@ -35,6 +35,7 @@ public class BoardGame extends View {
     Handler handler;
     ThreadGame threadGame;
     Card deck1;
+    Card movingCard; // הקלף שיוצא מהיד אל ה-Trash
     int selectedCard=-1;
     private boolean isRun = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
@@ -51,11 +52,7 @@ public class BoardGame extends View {
             middleGame=true;
             gameModule.startGame1();
         }
-        /*else if (player==1 && middleGame) {
-            IsFbRead = false;
-            gameModule.startGame2();
-            firstTime=true;
-        }*/
+
         else if (player==1 && !firstTime) {
             gameModule.secondStartGame1();
             firstTime=true;
@@ -65,14 +62,10 @@ public class BoardGame extends View {
             gameModule.startGame2();
             firstTime=true;
         }
-        /*else if (player==2 && middleGame) {
-            IsFbRead = false;
-            gameModule.startGame2();
-            firstTime=true;
-        }*/
+
 
         deck1 = new Card("deck", R.drawable.regularback);
-
+        movingCard = new Card("moving", R.drawable.regularback);
 
         threadGame = new ThreadGame();
         threadGame.start(); // runs as thread the run() method
@@ -81,7 +74,6 @@ public class BoardGame extends View {
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message message) {
-                // 1. הגנה: אם הרשימה התרוקנה, עצור הכל
                 if (selectedCardsNum.isEmpty()) {
                     isRun = false;
                     return false;
@@ -89,50 +81,53 @@ public class BoardGame extends View {
 
                 counter++;
 
-                // 2. קבלת האינדקס הנוכחי שבו מטפלים
                 int currentIdx = selectedCardsNum.get(0);
-
-                // 3. הגנה: וודא שהאינדקס קיים ביד השחקן (למניעת OutOfBounds מול gameModule)
                 List<CardNumbers> currentPlayerHand = (player == 1) ? GameModule.player1 : GameModule.player2;
-                if (currentIdx >= currentPlayerHand.size()) {
-                    selectedCardsNum.remove(0); // אינדקס לא תקין, הסר אותו
-                    return false;
-                }
 
-                // חישוב תנועה
-                float targetX = currentPlayerHand.get(currentIdx).getX();
-                float targetY = currentPlayerHand.get(currentIdx).getY();
-                float dx = (targetX - deck1.getX()) / 10;
-                float dy = (targetY - deck1.getY()) / 10;
-                deck1.setX(deck1.getX() + dx);
-                deck1.setY(deck1.getY() + dy);
+                if (currentIdx < currentPlayerHand.size()) {
+                    CardNumbers cardInHand = currentPlayerHand.get(currentIdx);
+
+                    // --- הגדרת הקלף שנזרק (רק בפריים הראשון) ---
+                    if (counter == 1) {
+                        // נותנים ל-movingCard את המיקום ההתחלתי של הקלף ביד
+                        movingCard.setX(cardInHand.getX());
+                        movingCard.setY(cardInHand.getY());
+                        //  לוקחים את התמונה של הקלף הנוכחי ביד
+                        movingCard.setBitmap(cardInHand.getBitmap());
+                    }
+
+                    // --- אנימציה 1: מהקופה ליד (deck1) ---
+                    float targetX = cardInHand.getX();
+                    float targetY = cardInHand.getY();
+                    deck1.setX(deck1.getX() + (targetX - deck1.getX()) / (11 - counter));
+                    deck1.setY(deck1.getY() + (targetY - deck1.getY()) / (11 - counter));
+
+                    // --- אנימציה 2: מהיד ל-Trash (movingCard) ---
+                    float trashX = Width / 2 + 15;
+                    float trashY = height - 4 * (height / 6);
+                    movingCard.setX(movingCard.getX() + (trashX - movingCard.getX()) / (11 - counter));
+                    movingCard.setY(movingCard.getY() + (trashY - movingCard.getY()) / (11 - counter));
+                }
 
                 if (counter == 10) {
                     counter = 0;
-
-                    // 1. עדכון הלוגיקה של המשחק - החלפת הקלף בזיכרון
                     gameModule.ChangeCard(player, currentIdx);
-
-                    // 2. הסרת האינדקס שסיים אנימציה
                     selectedCardsNum.remove(0);
 
-                    // 3. איפוס מיקום הקופה לאנימציה הבאה
+                    // איפוס
                     deck1.setX(Width / 2 - (Width / 5 + 15));
                     deck1.setY(height - 4 * (height / 6));
+                    movingCard.setX(-500); // העלמה מהמסך
 
-                    // 4. בדיקה האם סיימנו את כל האנימציות של התור
                     if (selectedCardsNum.isEmpty()) {
                         isRun = false;
-
-                        // --- כאן קורה הקסם ---
-                        // רק עכשיו, כשכל הקלפים הוחלפו בזיכרון, נעדכן את Firebase ונסיים תור
                         Apdate();
                         isWin();
                     }
                 }
 
                 invalidate();
-                return false;
+                return true;
             }
         });
 
@@ -235,6 +230,17 @@ public class BoardGame extends View {
 
             // חשוב: שחרור ה-Bitmap מהזיכרון כדי למנוע קריסות (מאחר ואנחנו יוצרים אותו בתוך ה-Draw)
             trashBitmap.recycle();
+        }
+        // ציור האנימציה של הקלף שנזרק ל-Trash
+        if (isRun && movingCard.getX() != -500) {
+            // טעינת התמונה הדינמית (התמונה של הקלף שהיה ביד)
+            Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), movingCard.getBitmap());
+            if (mBitmap != null) {
+                Bitmap scaledM = Bitmap.createScaledBitmap(mBitmap, Width / 5 - 10, 300, false);
+                movingCard.draw(canvas, scaledM);
+                // לא לשכוח recycle אם אתה יוצר ביטמפ חדש כל פעם ב-draw
+                mBitmap.recycle();
+            }
         }
     }
 
