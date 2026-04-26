@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.LogRecord;
 
 public class BoardGame extends View {
     private  Context context;
@@ -27,7 +32,13 @@ public class BoardGame extends View {
     protected boolean choosing=false,middleGame;
     private static int player;
     public static boolean IsFbRead = false;
+    Handler handler;
+    ThreadGame threadGame;
+    Card deck1;
+    private boolean isRun = true;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
+    private int counter = 0;
+
 
     public BoardGame(Context context,int player) {
         super(context);
@@ -57,6 +68,28 @@ public class BoardGame extends View {
             gameModule.startGame2();
             firstTime=true;
         }*/
+
+        deck1 = new Card("deck", R.drawable.regularback);
+
+
+        threadGame = new ThreadGame();
+        threadGame.start(); // runs as thread the run() method
+
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message message) {
+                counter++;
+                if(counter == 10)
+                {
+                    isRun = false;
+                    //להזיז במוב
+                    deck1.setX(deck1.getX() +50);
+                }
+
+                invalidate(); // clear the canvas and calls to onDraw()
+                return false;
+            }
+        });
 
 
     }
@@ -129,6 +162,9 @@ public class BoardGame extends View {
         Bitmap deckBitmap = BitmapFactory.decodeResource(getResources(), deck.getBitmap());
         deckBitmap = Bitmap.createScaledBitmap(deckBitmap, Width / 5 - 10, 300, false);
         deck.draw(canvas, deckBitmap);
+
+        //קלף של חבילה להזיז אותו בMOVE
+        deck1.draw(canvas,deckBitmap);
 
         // --- ציור ערימת הזריקה (Trash) ---
         // בדיקה כפולה: 1) שהרשימה קיימת בזיכרון (לא Null) ו-2) שיש בה לפחות קלף אחד (לא ריקה)
@@ -519,6 +555,25 @@ public class BoardGame extends View {
         //השמה מחדש של הערכין בפיירבייס
         gameModule.SetApdateDecks();
     }
+
+    private class ThreadGame extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            while (true)
+            {
+                try {
+                    sleep(40);
+                    if(isRun)
+                        handler.sendEmptyMessage(0);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
 }
 
 

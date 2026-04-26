@@ -3,6 +3,7 @@ package com.example.sleepingqueens;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GameModule {
@@ -197,6 +198,7 @@ public class GameModule {
         instace.FbClear();
     }
     public void ChangeCard(int player, int card){
+
         //אם החבילה התרוקנה צריך לחדש אותה ולערבב אותה ולהיפטר מהקלפים שבזבל
         if (mainDeck == null || mainDeck.isEmpty()){
             setMainDeck();
