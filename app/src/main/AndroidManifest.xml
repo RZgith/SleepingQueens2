@@ -12,6 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SleepingQueens">
         <activity
+            android:name=".InstructionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InstructionsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SleepingQueens" />
+        <activity
             android:name=".QueenDialog"
             android:exported="false" />
         <activity

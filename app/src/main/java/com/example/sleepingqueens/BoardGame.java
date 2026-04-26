@@ -36,6 +36,7 @@ public class BoardGame extends View {
     ThreadGame threadGame;
     Card deck1;
     Card movingCard; // הקלף שיוצא מהיד אל ה-Trash
+    Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);  //כפתור תרגיל
     int selectedCard=-1;
     private boolean isRun = false;
     private final ArrayList<Integer> selectedCardsNum = new ArrayList<Integer>();
@@ -141,6 +142,11 @@ public class BoardGame extends View {
             height=canvas.getHeight();
             deck1.setX(Width / 2 - (Width / 5 + 15));
             deck1.setY(height - 4 * (height / 6));
+            // --- ציור כפתור Exercise ---
+            if(player%2==gameModule.turnCounter)
+                rectPaint.setColor(Color.argb(255, 197, 255, 240));
+            else
+                rectPaint.setColor(Color.GRAY);
         }
         firstTime=false;
 
@@ -148,8 +154,6 @@ public class BoardGame extends View {
         if(!IsFbRead) return;
 
         // --- ציור כפתור Exercise ---
-        Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        rectPaint.setColor(Color.GRAY);
         float left = 0, top = height-4*(height/6), right = 300, bottom = top+160;
         canvas.drawRect(left, top, right, bottom, rectPaint);
 
@@ -588,6 +592,12 @@ public class BoardGame extends View {
 
 
     public void SetNewMove() {
+        if(player%2==gameModule.turnCounter)
+        {
+            rectPaint.setColor(Color.argb(255, 197, 255, 240));
+        }
+        else
+            rectPaint.setColor(Color.GRAY);
         //ציור מחדש של הלוח
         invalidate();
         if(( (myQnumber>gameModule.q1.size() && player==1) || (myQnumber>gameModule.q2.size() && player==2) )

@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if(v==VSComputerbtn)
         {
-
+            Intent i = new Intent(MainActivity.this, InstructionsActivity.class);
+            startActivity(i);
         }
 
 
